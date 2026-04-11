@@ -19,11 +19,12 @@ namespace BAU_PROTO.Services.JwtService
                 throw new InvalidOperationException("Error server security config, go ask server owner");
         }
 
-        public string GenerateToken(string username)
+        public string GenerateToken(string username, string role)
         {
             var claims = new[]
             {
                 new Claim(ClaimTypes.Name, username),
+                new Claim(ClaimTypes.Role, role),
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
             };
 
@@ -45,14 +46,18 @@ namespace BAU_PROTO.Services.JwtService
             return Guid.NewGuid().ToString();
         }
 
-        public string RenewToken(ClaimsIdentity identity,
-            DateTime expiredDate,
-            string role)
+        public string RenewToken(string token,
+            DateTime expiredDate)
         {
-            var username = identity?.FindFirst(ClaimTypes.Name)?.Value;
-            var createdAt = identity?.FindFirst(JwtRegisteredClaimNames.Jti)?.Value;
 
-            if (username == null || createdAt == null)
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadJwtToken(token); ;
+            
+            var username = jwtToken?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+            var claimNames = jwtToken?.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti)?.Value;
+            var role = jwtToken?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+
+            if (username == null || claimNames == null || role == null)
             {
                 throw new JwtException(JwtErrorType.InvalidToken);
             }
@@ -62,7 +67,7 @@ namespace BAU_PROTO.Services.JwtService
                 throw new JwtException(JwtErrorType.RefreshTokenExpired);
             }
 
-            return this.GenerateToken(username);
+            return this.GenerateToken(username, role);
         }
 
 
