@@ -1,4 +1,6 @@
+using BAU_PROTO.Persistence;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -35,6 +37,12 @@ builder.Services.AddControllers();
 // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
 builder.Services.AddOpenApi();
 
+builder.Services.AddDbContext<AppDbContext>(options =>
+    options.UseMySql(
+        builder.Configuration.GetConnectionString(ConstantConfig.DbConfig),
+        ServerVersion.AutoDetect(builder.Configuration.GetConnectionString(ConstantConfig.DbConfig))
+    ));
+
 var app = builder.Build();
 
 app.UseAuthentication();
@@ -54,7 +62,7 @@ app.UseDefaultFiles();
 
 app.UseStaticFiles(); // I want use angularjs for handle SPA instead of using razor page
 
-app.MapFallbackToFile("index.html"); // I want use angularjs for handle SPA instead of using razor page
+app.MapFallbackToFile(ConstantConfig.ViewRoot); // I want use angularjs for handle SPA instead of using razor page
 
 app.MapControllers();
 
