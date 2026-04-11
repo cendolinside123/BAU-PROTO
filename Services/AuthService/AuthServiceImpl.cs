@@ -37,14 +37,6 @@ namespace BAU_PROTO.Services.AuthService
             }
 
 
-            var checkEmail = await _context.Users.Where(u => u.Email == registerRequest.Email).FirstOrDefaultAsync();
-
-            if (checkEmail != null)
-            {
-                throw new ArgumentException("Email already exists");
-            }
-
-
             var user = new Users
             {
                 Email = registerRequest.Email,
