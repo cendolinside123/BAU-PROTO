@@ -6,7 +6,7 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var key = builder.Configuration.GetSection("bahl").Value;
+var key = builder.Configuration.GetSection(ConstantConfig.Sec).Value;
 
 builder.Services.AddAuthentication(options =>
 {
