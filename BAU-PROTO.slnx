@@ -1,0 +1,10 @@
+<Solution>
+  <Configurations>
+    <BuildType Name="BVT" />
+    <BuildType Name="Debug" />
+    <BuildType Name="Release" />
+  </Configurations>
+  <Project Path="BAU-PROTO.csproj">
+    <BuildType Solution="BVT|*" Project="Debug" />
+  </Project>
+</Solution>
