@@ -24,7 +24,49 @@ builder.Services.AddAuthentication(options =>
 
         IssuerSigningKey = new SymmetricSecurityKey(
             Encoding.UTF8.GetBytes(key)
-        )
+        ),
+        ClockSkew = TimeSpan.Zero
+    };
+
+    options.Events = new JwtBearerEvents
+    {
+        OnAuthenticationFailed = context =>
+        {
+
+            context.NoResult();
+
+            context.Response.StatusCode = 401;
+            context.Response.ContentType = "application/json";
+
+            string message = context.Exception switch
+            {
+                SecurityTokenExpiredException => "Your token already expired",
+                SecurityTokenInvalidSignatureException => "Invalid token signature",
+                _ => "Your token already invalid, re login first"
+            };
+
+            return context.Response.WriteAsJsonAsync(new
+            {
+                message = message
+            });
+        },
+
+        OnChallenge = context =>
+        {
+            context.HandleResponse();
+
+            // prevent double write
+            if (context.Response.HasStarted)
+                return Task.CompletedTask;
+
+            context.Response.StatusCode = 401;
+            context.Response.ContentType = "application/json";
+
+            return context.Response.WriteAsJsonAsync(new
+            {
+                message = "Unauthorized access, please login first"
+            });
+        }
     };
 });
 

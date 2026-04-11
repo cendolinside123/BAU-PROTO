@@ -54,12 +54,12 @@ namespace BAU_PROTO.Services.JwtService
 
             if (username == null || createdAt == null)
             {
-                throw new InvalidOperationException("Invalid token");
+                throw new JwtException(JwtErrorType.InvalidToken);
             }
 
             if (expiredDate < DateTime.Now)
             {
-                throw new InvalidOperationException("Refresh token expired, please login again");
+                throw new JwtException(JwtErrorType.RefreshTokenExpired);
             }
 
             return this.GenerateToken(username);
