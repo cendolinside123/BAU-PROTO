@@ -1,48 +1,69 @@
-﻿app.factory('AuthInterceptor', ['$http', '$window', '$q', '$location',
-    function ($http, $window, $q, $location) {
+﻿app.factory('AuthInterceptor', ['$window', '$q', '$location', '$injector',
+    function ($window, $q, $location, $injector) {
         var storage = $window.localStorage;
         var cachedToken = null;
+
         return {
-            // Retrieve current access token
-            getToken: function () {
-                if (!cachedToken) {
-                    cachedToken = storage.getItem('token');
+            request: function (config) {
+                // SKIP if URL contains /api/Auth/
+                if (config.url.indexOf('/api/Auth/') !== -1) {
+                    return config;
                 }
-                return cachedToken;
+
+                // Skip if only page URL
+                if (config.url.indexOf('app/views/') !== -1) {
+                    return config;
+                }
+
+                var token = storage.getItem('token');
+                if (token) {
+                    config.headers['Authorization'] = 'Bearer ' + token;
+                }
+                return config;
             },
 
-            // Request a new token using a stored refresh token
-            refreshToken: function () {
+            responseError: function (rejection) {
+                // SKIP if URL contains /api/Auth/ OR is not a 401
+                if (rejection.status !== 401 || rejection.config.url.indexOf('/api/Auth/') !== -1) {
+                    return $q.reject(rejection);
+                }
+
+                var $http = $injector.get('$http');
                 var refreshToken = storage.getItem('refreshToken');
 
                 if (!refreshToken) {
-                    return $q.reject("No refresh token available");
+                    this.logout();
+                    return $q.reject(rejection);
                 }
 
-                // Post to your refresh endpoint
-                // skipAuthorization: true prevents interceptor loops if using a library like angular-jwt
-                return $http.post('/api/auth/refresh', { refresh_token: refreshToken })
+                // Attempt to refresh
+                return $http.post('/api/Auth/refresh', { refresh_token: refreshToken })
                     .then(function (response) {
                         var newToken = response.data.data.access_token;
                         storage.setItem('token', newToken);
-                        cachedToken = newToken;
-                        return newToken;
+
+                        // Retry original request with new token
+                        rejection.config.headers['Authorization'] = 'Bearer ' + newToken;
+                        return $http(rejection.config);
+                    })
+                    .catch(function () {
+                        // If refresh fails, log out
+                        cachedToken = null;
+                        storage.removeItem('token');
+                        storage.removeItem('refreshToken');
+                        storage.removeItem('userInfo');
+                        $location.path("/login");
+                        return $q.reject(rejection);
                     });
             },
 
-            // Clean up storage on logout or failed refresh
             logout: function () {
                 cachedToken = null;
                 storage.removeItem('token');
                 storage.removeItem('refreshToken');
                 storage.removeItem('userInfo');
-                // Redirect to login page or broadcast logout event
                 $location.path("/login");
-            },
-
-            // Check if a token exists
-            isAuthenticated: function () {
-                return !!this.getToken();
             }
         };
-}]);
+    }
+]);
