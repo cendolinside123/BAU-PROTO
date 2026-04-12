@@ -30,14 +30,25 @@
 
                 var $http = $injector.get('$http');
                 var refreshToken = storage.getItem('refreshToken');
+                var token = storage.getItem('token');
 
                 if (!refreshToken) {
                     this.logout();
                     return $q.reject(rejection);
                 }
 
+                if (!token) {
+                    this.logout();
+                    return $q.reject(rejection);
+                }
+
                 // Attempt to refresh
-                return $http.post('/api/Auth/refresh', { refresh_token: refreshToken })
+                var headres = {
+                    refreshToken: refreshToken,
+                    Authorization: token
+                }
+
+                return $http.post('/api/Auth/refresh', null, { headers: headres })
                     .then(function (response) {
                         var newToken = response.data.data.access_token;
                         storage.setItem('token', newToken);
@@ -58,11 +69,34 @@
             },
 
             logout: function () {
-                cachedToken = null;
-                storage.removeItem('token');
-                storage.removeItem('refreshToken');
-                storage.removeItem('userInfo');
-                $location.path("/login");
+
+                var $http = $injector.get('$http');
+                var refreshToken = storage.getItem('refreshToken');
+                var token = storage.getItem('token');
+
+                if (refreshToken && token) {
+
+                    var headres = {
+                        refreshToken: refreshToken,
+                        Authorization: token
+                    }
+
+                    $http.post('/api/Auth/logout', null, { headers: headres })
+                        .then(function (response) {
+                            cachedToken = null;
+                            storage.removeItem('token');
+                            storage.removeItem('refreshToken');
+                            storage.removeItem('userInfo');
+                            $location.path("/login");
+                        })
+                        .catch(function () {
+                            cachedToken = null;
+                            storage.removeItem('token');
+                            storage.removeItem('refreshToken');
+                            storage.removeItem('userInfo');
+                            $location.path("/login");
+                        });
+                }
             }
         };
     }

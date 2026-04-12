@@ -1,4 +1,5 @@
 ﻿using BAU_PROTO.Services.AuthService;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 
@@ -63,5 +64,78 @@ namespace BAU_PROTO.Controllers.AuthController
                 return BadRequest(new { message = ex.Message });
             }
         }
+
+        [HttpPost("refresh")]
+        [Authorize]
+        public ActionResult<Object> refreshToken()
+        {
+            try
+            {
+                var refreshToken = Request.Headers["refreshToken"].ToString();
+                var accessToken = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+                var newAccessToken = _authService.RefreshToken(refreshToken, accessToken).Result;
+                var response = new
+                {
+                    message = "refresh token success",
+                    data = new
+                    {
+                        access_token = newAccessToken
+                    }
+                };
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpPost("logout")]
+        [Authorize]
+        public ActionResult<Object> logout()
+        {
+            try
+            {
+                var refreshToken = Request.Headers["refreshToken"].ToString();
+                var accessToken = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+                var doLogout = _authService.Logout(refreshToken).Result;
+                var response = new
+                {
+                    message = "logout success"
+                };
+                return Ok(response);
+            }
+            catch (Exception ex)
+            {
+
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        //[HttpPost("test")]
+        //[Authorize]
+        //public ActionResult<Object> test()
+        //{
+        //    var refreshToken = Request.Headers["refreshToken"].ToString();
+        //    var accessToken = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+        //    try
+        //    {
+        //        _ = _authService.RefreshTokenValidation(refreshToken).Result;
+        //        var response = new
+        //        {
+        //            message = "test success",
+        //            data = new
+        //            {
+        //                access_token = accessToken,
+        //                refresh_token = refreshToken
+        //            }
+        //        };
+        //        return Ok(response);
+        //    }
+        //    catch (Exception ex) {
+        //        return BadRequest(new { message = "test failed" });
+        //    }
+             
+        //}
     }
 }
