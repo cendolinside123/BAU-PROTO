@@ -7,6 +7,7 @@ public class AppDbContext : DbContext
     {
     }
     public DbSet<Users> Users { get; set; }
+    public DbSet<Products> Products { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -15,6 +16,15 @@ public class AppDbContext : DbContext
             entity.Property(e => e.CreatedAt)
                 .HasDefaultValueSql(_currentTime)
                 .ValueGeneratedOnAdd();
+        });
+        modelBuilder.Entity<Products>(entity =>
+        {
+            entity.Property(e => e.CreatedAt)
+                .HasDefaultValueSql(_currentTime)
+                .ValueGeneratedOnAdd();
+            entity.Property(e => e.UpdatedAt)
+                .HasDefaultValueSql(_currentTime)
+                .ValueGeneratedOnAddOrUpdate();
         });
     }
 }
