@@ -33,6 +33,10 @@ namespace BAU_PROTO.Services.AuthService
 
             var getUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == loginRequest.Email);
 
+            if (getUser == null) {
+                throw new ArgumentException("Email not found");
+            }
+
             var getPasssword = SecurityEncrypt.Decrypt(getUser.PasswordHash, _key, _iv);
 
             if (loginRequest.DecryptPassword() != getPasssword)

@@ -26,8 +26,12 @@
 app.run(['$rootScope', '$location', '$window',
     function ($rootScope, $location, $window) {
 
+        $rootScope.location = $location;
+
         $rootScope.$on("$routeChangeStart", function (event, next, current) {
-            var user = $window.sessionStorage.getItem("user");
+            let user = $window.localStorage.getItem("userInfo");
+            let refreshToken = $window.localStorage.getItem("refreshToken");
+            let token = $window.localStorage.getItem("token");
 
             if (!user && (next.templateUrl !== "app/views/login.html" && next.templateUrl !== "app/views/register.html")) {
                 $location.path("/login");

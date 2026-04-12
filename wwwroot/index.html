@@ -8,10 +8,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.8.2/angular-route.js"></script>
-    <!--<title>SPA AngularJS + ASP.NET</title>-->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
     <script src="App/app.js"></script>
     <script type="module" src="App/routes.js"></script>
-
+    <script type="module" src="App/Controllers/InterseptorController.js"></script>
     <script type="module" src="App/Controllers/aboutController.js"></script>
     <script type="module" src="App/Controllers/homeController.js"></script>
     <script type="module" src="App/Controllers/loginController.js"></script>
@@ -19,12 +22,15 @@
 </head>
 <body>
 
-    <h1>My SPA</h1>
+    <div ng-hide="location.path() === '/login' || location.path() === '/register'">
+        <a href="/">Home</a> |
+        <a href="/about">About</a>
+    </div>
+    
 
-    <a href="/">Home</a> |
-    <a href="/about">About</a>
+    <div ng-view>
 
-    <div ng-view></div>
+    </div>
 
     
 
