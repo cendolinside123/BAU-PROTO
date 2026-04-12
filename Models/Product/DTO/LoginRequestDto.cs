@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using BAU_PROTO.Persistence;
+using System.Text.RegularExpressions;
 
 public class LoginRequestDto
 {
@@ -24,8 +25,30 @@ public class LoginRequestDto
         if (string.IsNullOrWhiteSpace(Password))
         {
             errors.Add("Password is required.");
+        } else         {
+            try
+            {
+                var decrypPassword = DecryptPassword();
+                if (decrypPassword.Length < 6)
+                {
+                    errors.Add("Password is to short.");
+                }
+            }
+            catch (Exception)
+            {
+                errors.Add("Password is not valid.");
+            }
         }
 
         return errors;
+    }
+
+    public string DecryptPassword()
+    {
+        var _config = new ConfigurationBuilder().AddJsonFile(ConstantConfig.GetAppConfig()).Build();
+        var key = _config.GetValue<string>(ConstantConfig.KeyFront);
+        var iv = _config.GetValue<string>(ConstantConfig.IVFront);
+
+        return SecurityEncrypt.Decrypt(Password, key, iv);
     }
 }

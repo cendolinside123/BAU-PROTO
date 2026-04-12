@@ -1,4 +1,5 @@
 ﻿using BAU_PROTO.Persistence;
+using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.EntityFrameworkCore;
 using MySqlConnector;
 
@@ -22,9 +23,37 @@ namespace BAU_PROTO.Services.AuthService
             _iv = _config.GetValue<string>(ConstantConfig.IV) ?? throw new InvalidOperationException("Error server security config, go ask server owner");
         }
 
-        public Task<(string token, string refreshToken, Users userInfo)> Login(LoginRequestDto loginRequest)
+        public async Task<(string token, string refreshToken, Users userInfo)> Login(LoginRequestDto loginRequest)
         {
-            throw new NotImplementedException();
+            var validationErrors = loginRequest.InputValidation();
+            if (validationErrors.Count > 0)
+            {
+                throw new ArgumentException(string.Join(", ", validationErrors));
+            }
+
+            var getUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == loginRequest.Email);
+
+            var getPasssword = SecurityEncrypt.Decrypt(getUser.PasswordHash, _key, _iv);
+
+            if (loginRequest.DecryptPassword() != getPasssword)
+            {
+                throw new ArgumentException("Invalid email or password");
+            }
+            var token = _jwtService.GenerateToken(getUser.Email, getUser.Role);
+            var refreshToken = _jwtService.GenerateRefreshToken();
+            getUser.RefreshToken = refreshToken;
+            getUser.RefreshTokenExpiresAt = DateTime.UtcNow.Date.AddDays(1);
+            getUser.LoginAt = DateTime.UtcNow;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+
+                return (token, refreshToken, getUser);
+            } catch (Exception ex)
+            {
+                throw new ArgumentException("Error when login, try again later");
+            }
         }
 
         public Task<string> RefreshToken(string refreshToken)
