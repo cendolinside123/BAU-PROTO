@@ -1,3 +1,6 @@
-﻿app.controller("LoginController", function ($scope) {
-    $scope.message = "Welcome to Login Page";
-});
+﻿app.controller('LoginController', [
+    '$scope', '$http',
+    function ($scope, $http) {
+        $scope.message = "Welcome to Login Page";
+    }
+]);

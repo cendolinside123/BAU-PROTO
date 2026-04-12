@@ -108,7 +108,13 @@ app.UseDefaultFiles();
 
 app.UseStaticFiles(); // I want use angularjs for handle SPA instead of using razor page
 
-app.MapFallbackToFile(ConstantConfig.ViewRoot); // I want use angularjs for handle SPA instead of using razor page
+if (app.Environment.IsDevelopment())
+{
+    app.MapFallbackToFile(ConstantConfig.ViewDevRoot); // I want use angularjs for handle SPA instead of using razor page
+} else
+{
+    app.MapFallbackToFile(ConstantConfig.ViewRoot);
+}
 
 app.MapControllers();
 

@@ -3,7 +3,8 @@
     public static class ConstantConfig
     {
         public const string DbConfig = "DefaultConnection";
-        public const string ViewRoot = "index.html";
+        public const string ViewDevRoot = "index.html";
+        public const string ViewRoot = "dist/index.html";
         public const string Sec = "bahl";
         public const string IVFront = "IVFront";
         public const string KeyFront = "keyFront";

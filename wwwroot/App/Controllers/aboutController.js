@@ -1,3 +1,6 @@
-﻿app.controller("AboutController", function ($scope) {
-    $scope.message = "This is About Page";
-});
+﻿app.controller('AboutController', [
+    '$scope', '$http',
+    function ($scope, $http) {
+        $scope.message = "Welcome to About Page";
+    }
+]);

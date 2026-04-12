@@ -6,3 +6,4 @@ obj/Container
 obj/BAU-PROTO.csproj.*
 obj/project.nuget.cache
 bin
+node_modules

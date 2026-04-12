@@ -1,3 +1,6 @@
-﻿app.controller("RegisterController", function ($scope) {
-    $scope.message = "Welcome to Register Page";
-});
+﻿app.controller('RegisterController', [
+    '$scope', '$http',
+    function ($scope, $http) {
+        $scope.message = "Welcome to Register Page";
+    }
+]);
