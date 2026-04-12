@@ -31,7 +31,6 @@
   <ItemGroup>
     <Folder Include="Models\Users\Entity\" />
     <Folder Include="Models\Users\DTO\" />
-    <Folder Include="wwwroot\" />
   </ItemGroup>
 
   <ItemGroup>
