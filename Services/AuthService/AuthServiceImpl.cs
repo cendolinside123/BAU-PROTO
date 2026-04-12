@@ -60,9 +60,24 @@ namespace BAU_PROTO.Services.AuthService
             }
         }
 
-        public Task<string> RefreshToken(string refreshToken)
+        public Task<string> RefreshToken(string refreshToken, string accessToken)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var getUser = this.RefreshTokenValidation(refreshToken).Result;
+                var newAccessToken = _jwtService.RenewToken(accessToken, getUser.expiredDate);
+                if (newAccessToken == null)
+                {
+                    throw new ArgumentException("Invalid access token, re-login");
+                } else
+                {
+                    return Task.FromResult(newAccessToken);
+                }
+            }
+            catch (JwtException ex)
+            {
+                throw new ArgumentException(string.Format("Invalid access token, re-login: {0}", ex.Message));
+            }
         }
 
         public async Task<int> RegisterUser(RegisterRequestDto registerRequest)
@@ -98,6 +113,45 @@ namespace BAU_PROTO.Services.AuthService
                 }
 
                 throw new ArgumentException("Error when register, try again later"); // rethrow other errors
+            }
+        }
+
+        public async Task<(int userId, DateTime expiredDate)> RefreshTokenValidation(string refreshToken)
+        {
+            var getUser = await _context.Users.FirstOrDefaultAsync(u => u.RefreshToken == refreshToken);
+
+            if (getUser == null || getUser.RefreshTokenExpiresAt == null)
+            {
+                throw new ArgumentException("Invalid refresh token, re-login");
+            }
+
+            if (getUser.RefreshTokenExpiresAt < DateTime.UtcNow)
+            {
+                throw new ArgumentException("Refresh token expired, re-login");
+            }
+            return (getUser.Id, getUser.RefreshTokenExpiresAt.Value);
+        }
+
+        public async Task<int> Logout(string refreshToken)
+        {
+            try
+            {
+                var getUser = await _context.Users.FirstOrDefaultAsync(u => u.RefreshToken == refreshToken);
+
+                if (getUser == null)
+                {
+                    return 0; // No user found with the provided refresh token, consider it as already logged out
+                }
+
+                getUser.RefreshToken = null;
+                getUser.RefreshTokenExpiresAt = null;
+                _context.Users.Update(getUser);
+                await _context.SaveChangesAsync();
+                return getUser.Id;
+            }
+            catch (Exception ex)
+            {
+                throw new ArgumentException("Error when logout, try again later");
             }
         }
     }
