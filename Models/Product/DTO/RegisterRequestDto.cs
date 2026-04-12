@@ -1,4 +1,6 @@
-﻿using System.Text.RegularExpressions;
+﻿using BAU_PROTO.Persistence;
+using Microsoft.AspNetCore.Identity.Data;
+using System.Text.RegularExpressions;
 
 public class RegisterRequestDto
 {
@@ -29,6 +31,20 @@ public class RegisterRequestDto
         {
             errors.Add("Password is required.");
         }
+        else
+        {
+            try
+            {
+                var decrypPassword = DecryptPassword();
+                if (decrypPassword.Length < 6) {
+                    errors.Add("Password is to short.");
+                }
+            }
+            catch (Exception)
+            {
+                errors.Add("Password is not valid.");
+            }
+        }
 
         if (string.IsNullOrWhiteSpace(Role))
         {
@@ -36,6 +52,15 @@ public class RegisterRequestDto
         }
         
         return errors;
+    }
+
+    public string DecryptPassword()
+    {
+        var _config = new ConfigurationBuilder().AddJsonFile(ConstantConfig.GetAppConfig()).Build();
+        var key = _config.GetValue<string>(ConstantConfig.KeyFront);
+        var iv = _config.GetValue<string>(ConstantConfig.IVFront);
+        
+        return SecurityEncrypt.Decrypt(Password, key, iv);
     }
 
 }
