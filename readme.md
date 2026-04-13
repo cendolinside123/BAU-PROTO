@@ -52,7 +52,7 @@ input:
 - POST /api/GetProduct: Get details of a specific product by ID
  input:
 	{
-		"Id": 1
+		"Id": "1"
 	}
 	header: {
 	"Authorization: "access token from login",
@@ -63,7 +63,7 @@ input:
 	{
 		"Name": "New Product",
 		"Description": "Product description",
-		"Price": 9.99
+		"Price": "9.99"
 	}
 	header: {
 	"Authorization: "access token from login",
@@ -72,10 +72,10 @@ input:
 - POST /api/UpdateProduct: Update an existing product by ID (requires authentication)
 input:
 	{
-		"Id": 1,
+		"Id": "1",
 		"Name": "Updated Product Name",
 		"Description": "Updated description",
-		"Price": 19.99
+		"Price": "19.99"
 	}
 	header: {
 	"Authorization: "access token from login",
@@ -84,7 +84,7 @@ input:
 - POST /api/DeleteProduct: Delete a product by ID (requires authentication)
 	input:
 	{
-		"id": 1
+		"id": "1"
 	}
 	header: {
 	"Authorization: "access token from login",
