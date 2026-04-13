@@ -22,7 +22,7 @@ namespace BAU_PROTO.Services.ProductService
         {
             try
             {
-                _ = _authService.RefreshTokenValidation(refreshToken);
+                _ = await _authService.RefreshTokenValidation(refreshToken);
 
                 var validationErrors = createProductDto.InputValidation();
 
@@ -43,7 +43,7 @@ namespace BAU_PROTO.Services.ProductService
             }
             catch (Exception ex)
             {
-                throw new ArgumentException("An error occurred: ", ex);
+                throw new ArgumentException(ex.Message);
             }
         }
 
@@ -51,7 +51,7 @@ namespace BAU_PROTO.Services.ProductService
         {
             try
             {
-                _ = _authService.RefreshTokenValidation(refreshToken);
+                _ = await _authService.RefreshTokenValidation(refreshToken);
 
                 var validationErrors = deleteProductDto.InputValidation();
 
@@ -65,43 +65,50 @@ namespace BAU_PROTO.Services.ProductService
                 {
                     _context.Products.Remove(product);
                     await _context.SaveChangesAsync();
-                    return product.Id; 
-                } else
+                    return product.Id;
+                }
+                else
                 {
                     throw new ArgumentException("Already deleted");
                 }
             }
             catch (Exception ex)
             {
-                throw new ArgumentException("An error occurred: ", ex);
+                throw new ArgumentException(ex.Message);
             }
         }
 
-        public async Task<List<Products>> GetProducts(SearchProductDto searchProductDto, string refreshToken)
+        public async Task<List<Products>> GetProducts(SearchProductDto? searchProductDto, string refreshToken)
         {
             try
             {
-                _ = _authService.RefreshTokenValidation(refreshToken);
+                _ = await _authService.RefreshTokenValidation(refreshToken);
                 IQueryable<Products> productQuery = _context.Products;
-
-                if (!string.IsNullOrEmpty(searchProductDto.Name))
+                if (searchProductDto == null)
                 {
-                    productQuery = productQuery.Where(p => p.Name.Contains(searchProductDto.Name));
+
+                } else
+                {
+                    if (!string.IsNullOrEmpty(searchProductDto.Name))
+                    {
+                        productQuery = productQuery.Where(p => p.Name.Contains(searchProductDto.Name));
+                    }
+
+                    if (searchProductDto.page.HasValue && searchProductDto.pageSize.HasValue)
+                    {
+                        productQuery = productQuery
+                            .Skip((searchProductDto.page.Value - 1) * searchProductDto.pageSize.Value)
+                            .Take(searchProductDto.pageSize.Value);
+                    }
                 }
 
-                if (searchProductDto.page.HasValue && searchProductDto.pageSize.HasValue)
-                {
-                    productQuery = productQuery
-                        .Skip((searchProductDto.page.Value - 1) * searchProductDto.pageSize.Value)
-                        .Take(searchProductDto.pageSize.Value);
-                }
 
                 var results = await productQuery.ToListAsync();
                 return results;
             }
             catch (Exception ex)
             {
-                throw new ArgumentException("An error occurred: ", ex);
+                throw new ArgumentException(ex.Message);
             }
         }
 
@@ -109,7 +116,7 @@ namespace BAU_PROTO.Services.ProductService
         {
             try
             {
-                _ = _authService.RefreshTokenValidation(refreshToken);
+                _ = await _authService.RefreshTokenValidation(refreshToken);
                 var validationErrors = updateProducDto.InputValidation();
 
                 if (validationErrors.Count > 0)
@@ -136,7 +143,7 @@ namespace BAU_PROTO.Services.ProductService
             }
             catch (Exception ex)
             {
-                throw new ArgumentException("An error occurred: ", ex);
+                throw new ArgumentException(ex.Message);
             }
         }
 
@@ -144,7 +151,7 @@ namespace BAU_PROTO.Services.ProductService
         {
             try
             {
-                _ = _authService.RefreshTokenValidation(refreshToken);
+                _ = await _authService.RefreshTokenValidation(refreshToken);
                 var validationErrors = spesificSelectProductDto.InputValidation();
 
                 if (validationErrors.Count > 0)
@@ -164,7 +171,7 @@ namespace BAU_PROTO.Services.ProductService
             }
             catch (Exception ex)
             {
-                throw new ArgumentException("An error occurred: ", ex);
+                throw new ArgumentException(ex.Message);
             }
         }
     }

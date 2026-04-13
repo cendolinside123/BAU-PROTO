@@ -27,7 +27,7 @@ namespace BAU_PROTO.Controllers.ProductController
             try
             {
                 var refreshToken = Request.Headers["refreshToken"].ToString();
-                _ = _productService.CreateProduct(addProductDto, refreshToken);
+                var result = _productService.CreateProduct(addProductDto, refreshToken).Result;
                 var response = new
                 {
                     message = "add product success"
@@ -48,7 +48,7 @@ namespace BAU_PROTO.Controllers.ProductController
             try
             {
                 var refreshToken = Request.Headers["refreshToken"].ToString();
-                _ = _productService.UpdateProduct(updateProducDto, refreshToken);
+                _ = _productService.UpdateProduct(updateProducDto, refreshToken).Result;
                 var response = new
                 {
                     message = "update product success"
@@ -69,7 +69,7 @@ namespace BAU_PROTO.Controllers.ProductController
             try
             {
                 var refreshToken = Request.Headers["refreshToken"].ToString();
-                _ = _productService.DeleteProduct(deleteProductDto  , refreshToken);
+                _ = _productService.DeleteProduct(deleteProductDto, refreshToken).Result;
                 var response = new
                 {
                     message = "delete product success"
@@ -86,7 +86,7 @@ namespace BAU_PROTO.Controllers.ProductController
 
         [HttpPost("GetListProduct")]
         [Authorize]
-        public ActionResult<Object> GetListProduct(SearchProductDto searchProductDto)
+        public ActionResult<Object> GetListProduct(SearchProductDto? searchProductDto)
         {
             try
             {

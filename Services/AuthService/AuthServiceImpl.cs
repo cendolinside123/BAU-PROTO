@@ -60,18 +60,18 @@ namespace BAU_PROTO.Services.AuthService
             }
         }
 
-        public Task<string> RefreshToken(string refreshToken, string accessToken)
+        public async Task<string> RefreshToken(string refreshToken, string accessToken)
         {
             try
             {
-                var getUser = this.RefreshTokenValidation(refreshToken).Result;
+                var getUser = await this.RefreshTokenValidation(refreshToken);
                 var newAccessToken = _jwtService.RenewToken(accessToken, getUser.expiredDate);
                 if (newAccessToken == null)
                 {
                     throw new ArgumentException("Invalid access token, re-login");
                 } else
                 {
-                    return Task.FromResult(newAccessToken);
+                    return newAccessToken;
                 }
             }
             catch (JwtException ex)
