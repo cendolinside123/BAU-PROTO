@@ -34,8 +34,14 @@ app.run(['$rootScope', '$location', '$window',
             let refreshToken = $window.localStorage.getItem("refreshToken");
             let token = $window.localStorage.getItem("token");
 
-            if (!user && (next.templateUrl !== "app/views/login.html" && next.templateUrl !== "app/views/register.html")) {
-                $location.path("/login");
+            if (!user) {
+                if (next.templateUrl !== "app/views/login.html" && next.templateUrl !== "app/views/register.html") {
+                    $location.path("/login");
+                }
+            } else {
+                if (next.templateUrl === "app/views/login.html" || next.templateUrl === "app/views/register.html") {
+                    $location.path("/");
+                }
             }
         });
 

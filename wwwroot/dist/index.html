@@ -12,14 +12,15 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
-    <script src="App/app.js"></script>
-  <script type="module" crossorigin src="dist/assets/index-6re615wG.js"></script>
+    <script src="App/app.js"></script>
+  <script type="module" crossorigin src="dist/assets/index-DyvpIQCz.js"></script>
 </head>
 <body>
 
     <div ng-hide="location.path() === '/login' || location.path() === '/register'">
-        <a href="/">Home</a> |
-        <a href="/about">About</a>
+        <div ng-controller="LogoutController">
+            <button class="btn btn-default" ng-click="logout()">Logout</button>
+        </div>
     </div>
     
 
