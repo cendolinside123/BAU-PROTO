@@ -127,8 +127,5 @@ namespace BAU_PROTO.Controllers.ProductController
                 return BadRequest(new { message = ex.Message });
             }
         }
-        {
-
-        }
     }
 }   
