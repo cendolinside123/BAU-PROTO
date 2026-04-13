@@ -1,6 +1,6 @@
 ﻿app.controller('HomeController', [
-    '$scope', '$http',
-    function ($scope, $http) {
+    '$scope', '$http', '$location', '$window',
+    function ($scope, $http, $location, $window) {
         $scope.message = "Welcome to Home Page";
     }
 ]);

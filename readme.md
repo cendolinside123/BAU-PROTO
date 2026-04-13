@@ -31,12 +31,12 @@ input:
 - POST /api/auth/logout: Logout the user, clear the token (requires authentication)
 header: {
 	"Authorization: "access token from login",
-	"refreshToken" "refresh token from login"
+	"Refreshtoken" "refresh token from login"
 	}
 - POST /api/auth/refresh: Refresh the JWT token (requires authentication)
  header: {
 	"Authorization: "access token from login",
-	"refreshToken" "refresh token from login"
+	"Refreshtoken" "refresh token from login"
 	}
 - POST /api/GetListProduct: Get a list of all products
 input:
@@ -47,7 +47,7 @@ input:
 	}
 	header: {
 	"Authorization: "access token from login",
-	"refreshToken" "refresh token from login"
+	"Refreshtoken" "refresh token from login"
 	}
 - POST /api/GetProduct: Get details of a specific product by ID
  input:
@@ -56,7 +56,7 @@ input:
 	}
 	header: {
 	"Authorization: "access token from login",
-	"refreshToken" "refresh token from login"
+	"Refreshtoken" "refresh token from login"
 	}
 - POST /api/AddProduct: Create a new product (requires authentication)
 	input:
@@ -67,7 +67,7 @@ input:
 	}
 	header: {
 	"Authorization: "access token from login",
-	"refreshToken" "refresh token from login"
+	"Refreshtoken" "refresh token from login"
 	}
 - POST /api/UpdateProduct: Update an existing product by ID (requires authentication)
 input:
@@ -79,7 +79,7 @@ input:
 	}
 	header: {
 	"Authorization: "access token from login",
-	"refreshToken" "refresh token from login"
+	"Refreshtoken" "refresh token from login"
 	}
 - POST /api/DeleteProduct: Delete a product by ID (requires authentication)
 	input:
@@ -88,5 +88,5 @@ input:
 	}
 	header: {
 	"Authorization: "access token from login",
-	"refreshToken" "refresh token from login"
+	"Refreshtoken" "refresh token from login"
 	}

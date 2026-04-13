@@ -26,7 +26,7 @@ namespace BAU_PROTO.Controllers.ProductController
         {
             try
             {
-                var refreshToken = Request.Headers["refreshToken"].ToString();
+                var refreshToken = Request.Headers["Refreshtoken"].ToString();
                 var result = _productService.CreateProduct(addProductDto, refreshToken).Result;
                 var response = new
                 {
@@ -47,7 +47,7 @@ namespace BAU_PROTO.Controllers.ProductController
         {
             try
             {
-                var refreshToken = Request.Headers["refreshToken"].ToString();
+                var refreshToken = Request.Headers["Refreshtoken"].ToString();
                 _ = _productService.UpdateProduct(updateProducDto, refreshToken).Result;
                 var response = new
                 {
@@ -68,7 +68,7 @@ namespace BAU_PROTO.Controllers.ProductController
         {
             try
             {
-                var refreshToken = Request.Headers["refreshToken"].ToString();
+                var refreshToken = Request.Headers["Refreshtoken"].ToString();
                 _ = _productService.DeleteProduct(deleteProductDto, refreshToken).Result;
                 var response = new
                 {
@@ -90,7 +90,7 @@ namespace BAU_PROTO.Controllers.ProductController
         {
             try
             {
-                var refreshToken = Request.Headers["refreshToken"].ToString();
+                var refreshToken = Request.Headers["Refreshtoken"].ToString();
                 var result = _productService.GetProducts(searchProductDto, refreshToken).Result;
                 var response = new
                 {
@@ -113,7 +113,7 @@ namespace BAU_PROTO.Controllers.ProductController
         {
             try
             {
-                var refreshToken = Request.Headers["refreshToken"].ToString();
+                var refreshToken = Request.Headers["Refreshtoken"].ToString();
                 var result = _productService.GetProductSpesific(searchProductDto, refreshToken).Result;
                 var response = new
                 {

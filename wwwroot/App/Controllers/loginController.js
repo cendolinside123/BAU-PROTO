@@ -45,6 +45,7 @@
                         $window.localStorage.setItem("token", response.data.data.access_token);
                         $window.localStorage.setItem("refreshToken", response.data.data.refresh_token);
                         $window.localStorage.setItem("userInfo", JSON.stringify(response.data.data.user_info));
+                        $window.alert('Login Success');
                         $location.path("/"); // Redirect to dashboard or another page
                     } else {
                         $scope.errorMessage = response.data.message;

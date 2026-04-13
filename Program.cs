@@ -116,7 +116,7 @@ app.UseStaticFiles(); // I want use angularjs for handle SPA instead of using ra
 //    app.MapFallbackToFile(ConstantConfig.ViewRoot);
 //}
 
-app.MapFallbackToFile(ConstantConfig.ViewRoot); // use generated index.html by Vite as default page for SPA
+app.MapFallbackToFile(ConstantConfig.ViewDevRoot); // use generated index.html by Vite as default page for SPA
 
 app.MapControllers();
 

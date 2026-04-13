@@ -1,4 +1,33 @@
-﻿<div ng-controller="RegisterController">
+﻿<div class="container" ng-controller="RegisterController">
     <title>{{ message }}</title>
-    <h2>{{ message }}</h2>
+    <div class="row">
+        <div class="col-md-4 col-md-offset-4">
+            <div class="login-panel panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title">Please Sign In</h3>
+                </div>
+                <div class="panel-body">
+                    <form>
+                        <fieldset>
+                            <div class="form-group">
+                                <input class="form-control" type="email" placeholder="Email" name="email" type="text" autofocus ng-model="user.email">
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control" placeholder="Password" name="password" type="password" ng-model="user.password">
+                            </div>
+                            <div class="form-group">
+                                <input class="form-control" placeholder="Role" name="role" type="text" ng-model="user.role">
+                            </div>
+                            <a href="/login">Back to login page</a>
+                            <label style="color: red;">
+                                {{ errorMessage }}
+                            </label>
+                            <button type="submit" class="btn btn-lg btn-success btn-block" ng-click="register()">Register</button>
+                        </fieldset>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

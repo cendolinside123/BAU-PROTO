@@ -44,7 +44,7 @@
 
                 // Attempt to refresh
                 var headres = {
-                    refreshToken: refreshToken,
+                    Refreshtoken: refreshToken,
                     Authorization: token
                 }
 
@@ -77,8 +77,8 @@
                 if (refreshToken && token) {
 
                     var headres = {
-                        refreshToken: refreshToken,
-                        Authorization: token
+                        Refreshtoken: refreshToken,
+                        Authorization: "Bearer " +token
                     }
 
                     $http.post('/api/Auth/logout', null, { headers: headres })

@@ -71,7 +71,7 @@ namespace BAU_PROTO.Controllers.AuthController
         {
             try
             {
-                var refreshToken = Request.Headers["refreshToken"].ToString();
+                var refreshToken = Request.Headers["Refreshtoken"].ToString();
                 var accessToken = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
                 var newAccessToken = _authService.RefreshToken(refreshToken, accessToken).Result;
                 var response = new
@@ -96,7 +96,7 @@ namespace BAU_PROTO.Controllers.AuthController
         {
             try
             {
-                var refreshToken = Request.Headers["refreshToken"].ToString();
+                var refreshToken = Request.Headers["Refreshtoken"].ToString();
                 var accessToken = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
                 var doLogout = _authService.Logout(refreshToken).Result;
                 var response = new
