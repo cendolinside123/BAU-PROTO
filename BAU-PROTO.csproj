@@ -29,11 +29,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\Users\Entity\" />
-    <Folder Include="Models\Users\DTO\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Include="appsettings.BVT.json" />
   </ItemGroup>
 

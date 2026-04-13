@@ -11,6 +11,12 @@
         if (string.IsNullOrWhiteSpace(Id))
         {
             errors.Add("Id is required.");
+        } else
+        {
+            if (!int.TryParse(Id, out _))
+            {
+                errors.Add("Id must be a valid number.");
+            }
         }
         if (string.IsNullOrWhiteSpace(Name))
         {
@@ -32,6 +38,16 @@
             }
         }
         return errors;
+    }
+
+    public int GetId()
+    {
+        return int.Parse(Id);
+    }
+
+    public double GetPrice()
+    {
+        return double.Parse(Price);
     }
 
 }
