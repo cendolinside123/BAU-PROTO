@@ -35,10 +35,6 @@
 
   <ItemGroup>
     <None Include="appsettings.BVT.json" />
-    <None Include="wwwroot\dist\.env" />
-    <None Include="wwwroot\dist\.env.BVT" />
-    <None Include="wwwroot\dist\.env.Development" />
-    <None Include="wwwroot\dist\.env.Production" />
   </ItemGroup>
 
 </Project>

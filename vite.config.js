@@ -2,7 +2,7 @@
 
 export default defineConfig({
     root: "wwwroot",   // your index.html location
-
+    envDir: "../",
 
 
     build: {

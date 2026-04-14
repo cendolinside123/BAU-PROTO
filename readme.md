@@ -15,7 +15,7 @@ Front end using angularjs, can be found on wwwroot folder, you can run the proje
 
 .env file:
 all sensitive information such as database connection string, JWT secret key, and other configuration settings are stored in the .env file. Make sure to create a .env file in the root directory of the project and add the necessary environment variables before running the application.
-add all .env to root folder project and wwwroot/dist
+add all .env to root folder project
 
 List of API endpoints:
 
