@@ -15,6 +15,10 @@
 
   <ItemGroup>
     <Content Remove="appsettings.BVT.json" />
+    <Content Remove="wwwroot\dist\.env" />
+    <Content Remove="wwwroot\dist\.env.BVT" />
+    <Content Remove="wwwroot\dist\.env.Development" />
+    <Content Remove="wwwroot\dist\.env.Production" />
   </ItemGroup>
 
   <ItemGroup>
@@ -31,6 +35,10 @@
 
   <ItemGroup>
     <None Include="appsettings.BVT.json" />
+    <None Include="wwwroot\dist\.env" />
+    <None Include="wwwroot\dist\.env.BVT" />
+    <None Include="wwwroot\dist\.env.Development" />
+    <None Include="wwwroot\dist\.env.Production" />
   </ItemGroup>
 
 </Project>

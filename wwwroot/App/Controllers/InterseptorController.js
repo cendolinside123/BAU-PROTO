@@ -1,5 +1,5 @@
-﻿app.factory('AuthInterceptor', ['$window', '$q', '$location', '$injector',
-    function ($window, $q, $location, $injector) {
+﻿app.factory('AuthInterceptor', ['$window', '$q', '$location', '$injector', 'CONFIG',
+    function ($window, $q, $location, $injector, CONFIG) {
         var storage = $window.localStorage;
         var cachedToken = null;
 

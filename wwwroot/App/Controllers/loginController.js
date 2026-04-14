@@ -1,11 +1,11 @@
 ﻿app.controller('LoginController', [
-    '$scope', '$http', '$location', '$window',
-    function ($scope, $http, $location, $window) {
+    '$scope', '$http', '$location', '$window', 'CONFIG',
+    function ($scope, $http, $location, $window, CONFIG) {
 
         const path = "/api/Auth/login";
 
-        const keyString = "YmFobGlsZ29ibG9r";
-        const ivString = "cGlnYWltb255ZXQ=";
+        const keyString = CONFIG.VITE_keyFront;
+        const ivString = CONFIG.VITE_IVFront;
 
         $scope.message = "Welcome to Login Page";
 
