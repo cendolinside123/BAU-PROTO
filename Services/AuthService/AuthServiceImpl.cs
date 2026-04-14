@@ -19,8 +19,8 @@ namespace BAU_PROTO.Services.AuthService
             _context = context;
             var _config = new ConfigurationBuilder().AddJsonFile(ConstantConfig.GetAppConfig()).Build();
             _jwtService = new JwtService.JwtService(_config);
-            _key = _config.GetValue<string>(ConstantConfig.Key) ?? throw new InvalidOperationException("Error server security config, go ask server owner"); ;
-            _iv = _config.GetValue<string>(ConstantConfig.IV) ?? throw new InvalidOperationException("Error server security config, go ask server owner");
+            _key = Environment.GetEnvironmentVariable(ConstantConfig.Key) ?? throw new InvalidOperationException("Error server security config, go ask server owner"); ;
+            _iv = Environment.GetEnvironmentVariable(ConstantConfig.IV) ?? throw new InvalidOperationException("Error server security config, go ask server owner");
         }
 
         public async Task<(string token, string refreshToken, Users userInfo)> Login(LoginRequestDto loginRequest)

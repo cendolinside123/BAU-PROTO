@@ -15,7 +15,7 @@ namespace BAU_PROTO.Services.JwtService
         public JwtService(IConfiguration config)
         {
             _config = config;
-            _key = _config.GetValue<string>(ConstantConfig.Sec) ??
+            _key = Environment.GetEnvironmentVariable(ConstantConfig.Sec) ??
                 throw new InvalidOperationException("Error server security config, go ask server owner");
         }
 

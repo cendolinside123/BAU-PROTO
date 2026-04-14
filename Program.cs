@@ -6,7 +6,11 @@ using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
-var key = builder.Configuration.GetSection(ConstantConfig.Sec).Value;
+DotNetEnv.Env.Load($".env.{builder.Environment.EnvironmentName}");
+System.Diagnostics.Debug.WriteLine($".env.{builder.Environment.EnvironmentName}");
+
+var key = Environment.GetEnvironmentVariable(ConstantConfig.Sec) ?? "";
+
 
 builder.Services.AddAuthentication(options =>
 {

@@ -45,9 +45,8 @@ public class LoginRequestDto
 
     public string DecryptPassword()
     {
-        var _config = new ConfigurationBuilder().AddJsonFile(ConstantConfig.GetAppConfig()).Build();
-        var key = _config.GetValue<string>(ConstantConfig.KeyFront);
-        var iv = _config.GetValue<string>(ConstantConfig.IVFront);
+        var key = Environment.GetEnvironmentVariable(ConstantConfig.KeyFront);
+        var iv = Environment.GetEnvironmentVariable(ConstantConfig.IVFront);
 
         return SecurityEncrypt.Decrypt(Password, key, iv);
     }
