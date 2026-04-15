@@ -1,4 +1,5 @@
 ﻿using BAU_PROTO.Services.AuthService;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
@@ -66,11 +67,23 @@ namespace BAU_PROTO.Controllers.AuthController
         }
 
         [HttpPost("refresh")]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "RefreshToken")]
         public ActionResult<Object> refreshToken()
         {
+            var result = HttpContext.AuthenticateAsync("RefreshToken").Result;
+
+            if (!result.Succeeded)
+                return Unauthorized();
             try
             {
+
+                var getAuthBearer = Request.Headers["Authorization"].ToString();
+
+                if (string.IsNullOrEmpty(getAuthBearer) || !getAuthBearer.StartsWith("Bearer "))
+                {
+                    return BadRequest(new { message = "Invalid Authorization header" });
+                }
+
                 var refreshToken = Request.Headers["Refreshtoken"].ToString();
                 var accessToken = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
                 var newAccessToken = _authService.RefreshToken(refreshToken, accessToken).Result;
@@ -91,7 +104,7 @@ namespace BAU_PROTO.Controllers.AuthController
         }
 
         [HttpPost("logout")]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "RefreshToken")]
         public ActionResult<Object> logout()
         {
             try

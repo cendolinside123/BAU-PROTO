@@ -45,7 +45,7 @@
                 // Attempt to refresh
                 var headres = {
                     Refreshtoken: refreshToken,
-                    Authorization: token
+                    Authorization: 'Bearer ' + token
                 }
 
                 return $http.post('/api/Auth/refresh', null, { headers: headres })

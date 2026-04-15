@@ -5,9 +5,6 @@
             .when("/", {
                 templateUrl: "app/views/home.html",
             })
-            .when("/about", {
-                templateUrl: "app/views/about.html",
-            })
             .when("/login", {
                 templateUrl: "app/views/login.html",
             })

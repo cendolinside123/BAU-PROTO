@@ -14,10 +14,8 @@ var key = Environment.GetEnvironmentVariable(ConstantConfig.Sec) ?? "";
 
 builder.Services.AddAuthentication(options =>
 {
-    options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-    options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
 })
-.AddJwtBearer(options =>
+.AddJwtBearer("AccessToken", options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
@@ -59,7 +57,6 @@ builder.Services.AddAuthentication(options =>
         {
             context.HandleResponse();
 
-            // prevent double write
             if (context.Response.HasStarted)
                 return Task.CompletedTask;
 
@@ -72,6 +69,20 @@ builder.Services.AddAuthentication(options =>
             });
         }
     };
+})
+.AddJwtBearer("RefreshToken", options =>
+{
+    options.TokenValidationParameters = new TokenValidationParameters
+    {
+        ValidateIssuerSigningKey = true,
+        ValidateLifetime = false,
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes(key))
+    };
+
+    
 });
 
 builder.Services.AddAuthorization();

@@ -21,7 +21,7 @@ namespace BAU_PROTO.Controllers.ProductController
 
 
         [HttpPost("AddProduct")]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "AccessToken")]
         public ActionResult<Object> AddProduct(AddProductDto addProductDto)
         {
             try
@@ -42,7 +42,7 @@ namespace BAU_PROTO.Controllers.ProductController
         }
 
         [HttpPost("UpdateProduct")]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "AccessToken")]
         public ActionResult<Object> EditProduct(UpdateProducDto updateProducDto)
         {
             try
@@ -63,7 +63,7 @@ namespace BAU_PROTO.Controllers.ProductController
         }
 
         [HttpPost("DeleteProduct")]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "AccessToken")]
         public ActionResult<Object> DeleteProduct(DeleteProductDto deleteProductDto)
         {
             try
@@ -85,7 +85,7 @@ namespace BAU_PROTO.Controllers.ProductController
 
 
         [HttpPost("GetListProduct")]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "AccessToken")]
         public ActionResult<Object> GetListProduct(SearchProductDto? searchProductDto)
         {
             try
@@ -108,7 +108,7 @@ namespace BAU_PROTO.Controllers.ProductController
         }
 
         [HttpPost("GetProduct")]
-        [Authorize]
+        [Authorize(AuthenticationSchemes = "AccessToken")]
         public ActionResult<Object> GetProduct(SpesificSelectProductDto searchProductDto)
         {
             try
