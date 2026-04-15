@@ -19,9 +19,6 @@ add all .env to root folder project
 
 For .env you can contact me throught Whatsapp (fast response), office email, MSTeams, or create github ticket issue
 
-evertime run , npm run build:bvt, npm run build:prod don't forget to check index.html file on wwwroot/dist.
-Update <script type="module" crossorigin src="/assets/index-{random code}.js"></script> to <script type="module" crossorigin src="dist/assets/index-{random code}.js"></script>
-
 List of API endpoints:
 
 - POST /api/auth/login: Authenticate user and return JWT token
