@@ -9,6 +9,8 @@
 
         $scope.message = "Welcome to Login Page";
 
+        $scope.loadingStatus = false;
+
 
         $scope.login = function () {
             $scope.errorMessage = "";
@@ -21,7 +23,7 @@
                 $scope.errorMessage = "Please enter email or password.";
                 return;
             }
-
+            $scope.loadingStatus = true;
             const key = CryptoJS.enc.Utf8.parse(keyString);
             const iv = CryptoJS.enc.Utf8.parse(ivString);
             const encrypted = CryptoJS.AES.encrypt($scope.user.password, key, {
@@ -34,7 +36,6 @@
                 Email: $scope.user.email,
                 Password: encrypted.toString()
             }
-
 
             $http
                 .post(path, payload)
@@ -50,8 +51,10 @@
                     } else {
                         $scope.errorMessage = response.data.message;
                     }
+                    $scope.loadingStatus = false;
                 })
                 .catch(function (error) {
+                    $scope.loadingStatus = false;
                     $scope.errorMessage = error.data.message || "An error occurred during login.";
                 });
         };

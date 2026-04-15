@@ -18,10 +18,15 @@
                                 <input class="form-control" placeholder="Role" name="role" type="text" ng-model="user.role">
                             </div>
                             <a href="/login">Back to login page</a>
+                            <div class="form-group">
+                                <label style="color: black;" ng-show="loadingStatus">
+                                    Loading...
+                                </label>
+                            </div>
                             <label style="color: red;">
                                 {{ errorMessage }}
                             </label>
-                            <button type="submit" class="btn btn-lg btn-success btn-block" ng-click="register()">Register</button>
+                            <button type="submit" class="btn btn-lg btn-success btn-block" ng-click="register()" ng-disabled="loadingStatus">Register</button>
                         </fieldset>
                     </form>
 

@@ -7,6 +7,8 @@
         const keyString = CONFIG.VITE_keyFront;
         const ivString = CONFIG.VITE_IVFront;
 
+        $scope.loadingStatus = false;
+
         $scope.message = "Welcome to Register Page";
 
         $scope.register = function () {
@@ -20,7 +22,7 @@
                 $scope.errorMessage = "Please enter email, password, and role.";
                 return;
             }
-
+            $scope.loadingStatus = true;
             const key = CryptoJS.enc.Utf8.parse(keyString);
             const iv = CryptoJS.enc.Utf8.parse(ivString);
             const encrypted = CryptoJS.AES.encrypt($scope.user.password, key, {
@@ -46,9 +48,11 @@
                     } else {
                         $scope.errorMessage = response.data.message;
                     }
+                    $scope.loadingStatus = false;
                 })
                 .catch(function (error) {
                     $scope.errorMessage = error.data.message || "An error occurred during login.";
+                    $scope.loadingStatus = false;
                 });
         };
 

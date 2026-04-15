@@ -16,10 +16,15 @@
                                 <input class="form-control" placeholder="Password" name="password" type="password" ng-model="user.password">
                             </div>
                             <a href="/register">Register</a>
+                            <div class="form-group">
+                                <label style="color: black;" ng-show="loadingStatus">
+                                    Loading...
+                                </label>
+                            </div>
                             <label style="color: red;">
                                 {{ errorMessage }}
                             </label>
-                            <button type="submit" class="btn btn-lg btn-success btn-block" ng-click="login()">Login</button>
+                            <button type="submit" class="btn btn-lg btn-success btn-block" ng-click="login()" ng-disabled="loadingStatus">Login</button>
                         </fieldset>
                     </form>
 

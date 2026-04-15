@@ -18,6 +18,7 @@ app.controller('AddEditProductController', [
         const updateProductPath = "/api/Product/UpdateProduct";
 
         $scope.product = sharedData.selectedProduct;
+        $scope.loadingStatus = false;
 
         $scope.addEditProduct = function () {
 
@@ -52,23 +53,25 @@ app.controller('AddEditProductController', [
                 payload.Id = $scope.product.id.toString();
                 apiPath = updateProductPath;
             }
-
+            $scope.loadingStatus = true;
             $http.post(apiPath, payload, { headers: headres })
                 .then(function (response) {
-                    if (response.data.message.toLowerCase().includes("success")) {
-                        $scope.product = null;
-
+                    let getMessage = response.data.message;
+                    $scope.loadingStatus = false;
+                    if (getMessage.toLowerCase().includes("success")) {
+                        
                         if ($scope.product.id != null) {
                             $window.alert('Update product Success');
                         } else {
                             $window.alert('Add product Success');   
                         }
-
+                        $scope.product = null;
                     } else {
-                        $scope.errorMessage = response.data.message;
+                        $scope.errorMessage = getMessage;
                     }
                 })
                 .catch(function (error) {
+                    $scope.loadingStatus = false;
                     $scope.errorMessage = error.data.message || "An error occurred during login.";
                 });
 

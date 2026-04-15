@@ -18,10 +18,19 @@
                             <div class="form-group">
                                 <input class="form-control" type="text" placeholder="Harga" name="harga" type="number" autofocus ng-model="product.harga">
                             </div>
-                            <label style="color: red;">
-                                {{ errorMessage }}
-                            </label>
-                            <button type="submit" class="btn btn-lg btn-success btn-block" ng-click="addEditProduct()">Add Product</button>
+                            <div class="form-group">
+                                <label style="color: black;" ng-show="loadingStatus">
+                                    Loading...
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <label style="color: red;">
+                                    {{ errorMessage }}
+                                </label>
+                            </div>
+                            <div class="form-group">
+                                <button type="submit" class="btn btn-lg btn-success btn-block" ng-click="addEditProduct()" ng-disabled="loadingStatus">Add Product</button>
+                            </div>
                         </fieldset>
                     </form>
 
