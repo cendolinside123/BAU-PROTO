@@ -1,24 +1,25 @@
-﻿app.service('sharedData', function () {
-    this.selectedProduct = {
-        id: null,
-        nama: null,
-        desc: null,
-        harga: null
-    };
-});
-
-
+﻿
 app.controller('AddEditProductController', [
-    '$scope', '$http', '$location', '$window', 'CONFIG', 'sharedData',
-    function ($scope, $http, $location, $window, CONFIG, sharedData) {
+    '$scope', '$http', '$location', '$window', 'CONFIG',
+    function ($scope, $http, $location, $window, CONFIG) {
 
         let storage = $window.localStorage;
 
         const path = "/api/Product/AddProduct";
         const updateProductPath = "/api/Product/UpdateProduct";
 
-        $scope.product = sharedData.selectedProduct;
+        $scope.product = {
+            id: null,
+            nama: null,
+            desc: null,
+            harga: null
+        };
         $scope.loadingStatus = false;
+
+        $scope.$on('editProductValue', function (events, args) {
+            console.log(args);
+            $scope.product = args;
+        })
 
         $scope.addEditProduct = function () {
 

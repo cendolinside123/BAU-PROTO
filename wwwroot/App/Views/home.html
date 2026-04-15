@@ -38,15 +38,18 @@
             </div>
         </div>
     </div>
-    <div class="row">
+    <div class="row" ng-controller="ListProductController">
         <div class="row">
             <div class="col-md-5 col-md-offset-1">
-                <input class="form-control" type="text" placeholder="Search Box" name="nama" type="text" autofocus ng-model="product.nama">
+                <input class="form-control" type="text" placeholder="Search Box" name="nama" type="text" autofocus ng-model="namaProduct">
             </div>
+            <button ng-click="searchPage()" ng-disabled="loadingStatus">
+                Cari
+            </button>
         </div>
         <br />
         <div class="row">
-            <div class="col-md-10 col-md-offset-1">
+            <div class="col-md-10 col-md-offset-1" >
                 <table class="table table-bordered">
                     <tr>
                         <th>Nama produk</th>
@@ -56,24 +59,26 @@
                         <th>Update Date</th>
                         <th style="width:100px">        </th>
                     </tr>
-                    <tr> <td colspan="6" style="text-align:center;">data empty</td></tr>
-                    <!--<tr ng-repeat="product in products">
-                    <td>{{ product.nama }}</td>
-                    <td>{{ product.desc }}</td>
-                    <td>{{ product.harga }}</td>
-                    <td>{{ product.createdDate | date:'medium' }}</td>
-                    <td>{{ product.updatedDate | date:'medium' }}</td>
-                </tr>-->
+                    <tr> <td colspan="6" style="text-align:center;" ng-show="products.length == 0 && !loadingStatus">data empty</td></tr>
+                    <tr> <td colspan="6" style="text-align:center;" ng-show="loadingStatus">Loading....</td></tr>
+                    <tr ng-repeat="product in products" ng-show="!loadingStatus">
+                        <td>{{ product.name }}</td>
+                        <td>{{ product.description }}</td>
+                        <td>{{ product.price }}</td>
+                        <td>{{ product.createdAt | date:'medium' }}</td>
+                        <td>{{ product.updatedAt | date:'medium' }}</td>
+                        <td><button ng-click="getSelectedItem({id: product.id,nama: product.name,desc: product.description,harga: product.price})">Edit</button><button ng-click="deleteSelectedItem(product.id)">Delete</button></td>
+                    </tr>
                 </table>
             </div>
         </div>
         <br />
         <div class="row">
             <div class="col-md-1 col-md-offset-2">
-                <button>Prev</button>
+                <button ng-disabled="loadingStatus || page == 1" ng-click="prevPage()">Prev</button>
             </div>
             <div class="col-md-1 col-md-offset-6">
-                <button>Next</button>
+                <button ng-disabled="loadingStatus || lastPage" ng-click="nextPage()">Next</button>
             </div>
         </div>
 
