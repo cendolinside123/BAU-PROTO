@@ -19,11 +19,11 @@ namespace BAU_PROTO.Controllers.AuthController
         }
 
         [HttpPost("register")]
-        public ActionResult<Object> RegisterUser(RegisterRequestDto inputRegister)
+        public async Task<Object> RegisterUser(RegisterRequestDto inputRegister)
         {
             try
             {
-                var _ = _authService.RegisterUser(inputRegister).Result;
+                var _ = await _authService.RegisterUser(inputRegister);
                 var response = new
                 {
                     message = "register success"
@@ -37,11 +37,11 @@ namespace BAU_PROTO.Controllers.AuthController
         }
 
         [HttpPost("login")]
-        public ActionResult<Object> LoginUser(LoginRequestDto inputLogin)
+        public async Task<Object> LoginUser(LoginRequestDto inputLogin)
         {
             try
             {
-                var token = _authService.Login(inputLogin).Result;
+                var token = await _authService.Login(inputLogin);
                 var response = new
                 {
                     message = "login success",
@@ -68,9 +68,9 @@ namespace BAU_PROTO.Controllers.AuthController
 
         [HttpPost("refresh")]
         [Authorize(AuthenticationSchemes = "RefreshToken")]
-        public ActionResult<Object> refreshToken()
+        public async Task<Object> refreshToken()
         {
-            var result = HttpContext.AuthenticateAsync("RefreshToken").Result;
+            var result = await HttpContext.AuthenticateAsync("RefreshToken");
 
             if (!result.Succeeded)
                 return Unauthorized();
@@ -86,7 +86,7 @@ namespace BAU_PROTO.Controllers.AuthController
 
                 var refreshToken = Request.Headers["Refreshtoken"].ToString();
                 var accessToken = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-                var newAccessToken = _authService.RefreshToken(refreshToken, accessToken).Result;
+                var newAccessToken = await _authService.RefreshToken(refreshToken, accessToken);
                 var response = new
                 {
                     message = "refresh token success",
@@ -105,13 +105,13 @@ namespace BAU_PROTO.Controllers.AuthController
 
         [HttpPost("logout")]
         [Authorize(AuthenticationSchemes = "RefreshToken")]
-        public ActionResult<Object> logout()
+        public async Task<Object> logout()
         {
             try
             {
                 var refreshToken = Request.Headers["Refreshtoken"].ToString();
                 var accessToken = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-                var doLogout = _authService.Logout(refreshToken).Result;
+                var doLogout = await _authService.Logout(refreshToken)  ;
                 var response = new
                 {
                     message = "logout success"

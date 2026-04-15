@@ -22,12 +22,12 @@ namespace BAU_PROTO.Controllers.ProductController
 
         [HttpPost("AddProduct")]
         [Authorize(AuthenticationSchemes = "AccessToken")]
-        public ActionResult<Object> AddProduct(AddProductDto addProductDto)
+        public async Task<Object> AddProduct(AddProductDto addProductDto)
         {
             try
             {
                 var refreshToken = Request.Headers["Refreshtoken"].ToString();
-                var result = _productService.CreateProduct(addProductDto, refreshToken).Result;
+                var result = await _productService.CreateProduct(addProductDto, refreshToken);
                 var response = new
                 {
                     message = "add product success"
@@ -43,12 +43,12 @@ namespace BAU_PROTO.Controllers.ProductController
 
         [HttpPost("UpdateProduct")]
         [Authorize(AuthenticationSchemes = "AccessToken")]
-        public ActionResult<Object> EditProduct(UpdateProducDto updateProducDto)
+        public async Task<Object> EditProduct(UpdateProducDto updateProducDto)
         {
             try
             {
                 var refreshToken = Request.Headers["Refreshtoken"].ToString();
-                _ = _productService.UpdateProduct(updateProducDto, refreshToken).Result;
+                _ = await _productService.UpdateProduct(updateProducDto, refreshToken);
                 var response = new
                 {
                     message = "update product success"
@@ -64,12 +64,12 @@ namespace BAU_PROTO.Controllers.ProductController
 
         [HttpPost("DeleteProduct")]
         [Authorize(AuthenticationSchemes = "AccessToken")]
-        public ActionResult<Object> DeleteProduct(DeleteProductDto deleteProductDto)
+        public async Task<Object> DeleteProduct(DeleteProductDto deleteProductDto)
         {
             try
             {
                 var refreshToken = Request.Headers["Refreshtoken"].ToString();
-                _ = _productService.DeleteProduct(deleteProductDto, refreshToken).Result;
+                _ = await _productService.DeleteProduct(deleteProductDto, refreshToken);
                 var response = new
                 {
                     message = "delete product success"
@@ -86,12 +86,12 @@ namespace BAU_PROTO.Controllers.ProductController
 
         [HttpPost("GetListProduct")]
         [Authorize(AuthenticationSchemes = "AccessToken")]
-        public ActionResult<Object> GetListProduct(SearchProductDto? searchProductDto)
+        public async Task<Object> GetListProduct(SearchProductDto? searchProductDto)
         {
             try
             {
                 var refreshToken = Request.Headers["Refreshtoken"].ToString();
-                var result = _productService.GetProducts(searchProductDto, refreshToken).Result;
+                var result = await _productService.GetProducts(searchProductDto, refreshToken);
                 var response = new
                 {
                     message = "get list product success",
@@ -109,12 +109,12 @@ namespace BAU_PROTO.Controllers.ProductController
 
         [HttpPost("GetProduct")]
         [Authorize(AuthenticationSchemes = "AccessToken")]
-        public ActionResult<Object> GetProduct(SpesificSelectProductDto searchProductDto)
+        public async Task<Object> GetProduct(SpesificSelectProductDto searchProductDto)
         {
             try
             {
                 var refreshToken = Request.Headers["Refreshtoken"].ToString();
-                var result = _productService.GetProductSpesific(searchProductDto, refreshToken).Result;
+                var result = await _productService.GetProductSpesific(searchProductDto, refreshToken);
                 var response = new
                 {
                     message = "get product success",
