@@ -38,14 +38,45 @@
             </div>
         </div>
     </div>
+    <div class="row">
+        <div class="row">
+            <div class="col-md-5 col-md-offset-1">
+                <input class="form-control" type="text" placeholder="Search Box" name="nama" type="text" autofocus ng-model="product.nama">
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-10 col-md-offset-1">
+                <table class="table table-bordered">
+                    <tr>
+                        <th>Nama produk</th>
+                        <th>Deskripsi produk</th>
+                        <th>Harga</th>
+                        <th>Created Date</th>
+                        <th>Update Date</th>
+                        <th style="width:100px">        </th>
+                    </tr>
+                    <tr> <td colspan="6" style="text-align:center;">data empty</td></tr>
+                    <!--<tr ng-repeat="product in products">
+                    <td>{{ product.nama }}</td>
+                    <td>{{ product.desc }}</td>
+                    <td>{{ product.harga }}</td>
+                    <td>{{ product.createdDate | date:'medium' }}</td>
+                    <td>{{ product.updatedDate | date:'medium' }}</td>
+                </tr>-->
+                </table>
+            </div>
+        </div>
+        <br />
+        <div class="row">
+            <div class="col-md-1 col-md-offset-2">
+                <button>Prev</button>
+            </div>
+            <div class="col-md-1 col-md-offset-6">
+                <button>Next</button>
+            </div>
+        </div>
+
+    </div>
     
-    <table border="1">
-        <tr>
-            <th>Nama produk</th>
-            <th>Deskripsi produk</th>
-            <th>Harga</th>
-            <th>Created Date</th>
-            <th>Update Date</th>
-        </tr>
-    </table>
 </div>
