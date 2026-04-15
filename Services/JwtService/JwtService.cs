@@ -62,7 +62,7 @@ namespace BAU_PROTO.Services.JwtService
                 throw new JwtException(JwtErrorType.InvalidToken);
             }
 
-            if (expiredDate < DateTime.Now)
+            if (expiredDate < DateTime.UtcNow)
             {
                 throw new JwtException(JwtErrorType.RefreshTokenExpired);
             }
