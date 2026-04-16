@@ -1,8 +1,9 @@
 ﻿app.controller('ListProductController', [
-    '$scope', '$http', '$location', '$window', 'CONFIG', '$rootScope',
-    function ($scope, $http, $location, $window, CONFIG, $rootScope) {
+    '$scope', '$http', '$location', '$window', 'CONFIG', '$rootScope', '$mdDialog',
+    function ($scope, $http, $location, $window, CONFIG, $rootScope, $mdDialog) {
         $scope.products = [];
         $scope.loadingStatus = false;
+        $scope.deleteLoadingStatus = false;
         $scope.page = 1;
         $scope.lastPage = false
         $scope.namaProduct = null;
@@ -10,6 +11,7 @@
         let storage = $window.localStorage;
 
         const path = "/api/Product/GetListProduct";
+        const pathDelete = "/api/Product/DeleteProduct";
 
         $scope.searchPage = function () {
             $scope.page = 1;
@@ -54,12 +56,13 @@
                             $scope.lastPage = true;
                         }
                     } else {
-                        $location.alert(response.data.message);
+                        $window.alert(response.data.message);
                     }
-                    $scope.loadingStatus = false;
+                    
                 })
                 .catch(function (error) {
-                    $location.alert(error.data.message);
+                    $scope.loadingStatus = false;
+                    $window.alert(error.data.message);
                 });
             
         }
@@ -77,22 +80,61 @@
         }
 
         $scope.getSelectedItem = function (item) {
-            //sharedData.setValue(
-            //    {
-            //        id: 1,
-            //        nama: "asd",
-            //        desc: "asd",
-            //        harga: 500
-            //    }
-            //);
             $rootScope.$broadcast('editProductValue', item);
         }
 
         $scope.deleteSelectedItem = function (itemID) {
-            $scope.page = 1;
-            $scope.lastPage = false;
-            $scope.getProducts();
+            var ctrl = this;
+            if ($window.confirm("Are you sure you want to delete this?")) {
+                let refreshToken = storage.getItem('refreshToken');
+                let token = storage.getItem('token');
+
+                let headres = {
+                    Refreshtoken: refreshToken,
+                    Authorization: "Bearer " + token
+                }
+
+
+                let payload = {
+                    Id: itemID.toString()
+                }
+
+                $scope.loadingDialog(ctrl)
+
+                $http.post(pathDelete, payload, { headers: headres })
+                    .then(function (response) {
+                        let getMessage = response.data.message;
+                        $mdDialog.hide();
+                        if (getMessage.toLowerCase().includes("success")) {
+                            $scope.products = response.data.data;
+                            $window.alert("delete berhasil");
+                            $scope.searchPage();
+                            
+                        } else {
+                            $window.alert(response.data.message);
+                        }
+                    })
+                    .catch(function (error) {
+                        $mdDialog.hide();
+                        $window.alert(error.data.message);
+                    });
+
+            } else {
+                // Logic for "Cancel" clicked
+            }
+
         }
+
+        $scope.loadingDialog = function (ev) {
+            $mdDialog.show({
+                contentElement: '#myDialog',
+                template: '<md-dialog>' +
+                    '  <md-dialog-content><h1>Loading...</h1></md-dialog-content>' +
+                    '</md-dialog>',
+                parent: angular.element(document.body),
+                targetEvent: ev,
+            });
+        };
 
 
         $scope.getProducts();
