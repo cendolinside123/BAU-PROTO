@@ -59,12 +59,31 @@
                     })
                     .catch(function () {
                         // If refresh fails, log out
-                        cachedToken = null;
-                        storage.removeItem('token');
-                        storage.removeItem('refreshToken');
-                        storage.removeItem('userInfo');
-                        $location.path("/login");
-                        return $q.reject(rejection);
+
+                        var headres = {
+                            Refreshtoken: refreshToken,
+                            Authorization: "Bearer " + token
+                        }
+
+                        $http.post('/api/Auth/logout', null, { headers: headres })
+                            .then(function (response) {
+                                cachedToken = null;
+                                storage.removeItem('token');
+                                storage.removeItem('refreshToken');
+                                storage.removeItem('userInfo');
+                                $location.path("/login");
+                                return $q.reject(rejection);
+                            })
+                            .catch(function () {
+                                cachedToken = null;
+                                storage.removeItem('token');
+                                storage.removeItem('refreshToken');
+                                storage.removeItem('userInfo');
+                                $location.path("/login");
+                                return $q.reject(rejection);
+                            });
+
+                        
                     });
             },
 
