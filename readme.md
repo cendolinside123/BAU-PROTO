@@ -22,6 +22,8 @@ For .env you can contact me throught Whatsapp (fast response), office email, MST
 
 List of API endpoints:
 
+- POST /api/Configuration/configPrivate: Get private configuration data (use before login & register, does not require authentication)
+
 - POST /api/auth/login: Authenticate user and return JWT token
 input:
 {

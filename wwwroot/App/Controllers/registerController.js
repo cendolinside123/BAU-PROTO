@@ -3,9 +3,10 @@
     function ($scope, $http, $location, $window, CONFIG) {
 
         const path = "/api/Auth/register";
+        const configPath = "/api/Configuration/configPrivate";
 
-        const keyString = CONFIG.VITE_keyFront;
-        const ivString = CONFIG.VITE_IVFront;
+        //const keyString = CONFIG.VITE_keyFront;
+        //const ivString = CONFIG.VITE_IVFront;
 
         $scope.loadingStatus = false;
 
@@ -23,32 +24,42 @@
                 return;
             }
             $scope.loadingStatus = true;
-            const key = CryptoJS.enc.Utf8.parse(keyString);
-            const iv = CryptoJS.enc.Utf8.parse(ivString);
-            const encrypted = CryptoJS.AES.encrypt($scope.user.password, key, {
-                iv: iv,
-                mode: CryptoJS.mode.CBC,
-                padding: CryptoJS.pad.Pkcs7
-            });
-
-            let payload = {
-                Email: $scope.user.email,
-                Password: encrypted.toString(),
-                Role: $scope.user.role
-            }
-
 
             $http
-                .post(path, payload)
+                .post(configPath, null)
                 .then(function (response) {
                     // Handle success
-                    if (response.data.message === "register success") {
-                        $window.alert('Register Success');
-                        $location.path("/login"); // Redirect to dashboard or another page
-                    } else {
-                        $scope.errorMessage = response.data.message;
+                    const keyString = response.data.s0VZ;
+                    const ivString = response.data.svy;
+                    const key = CryptoJS.enc.Utf8.parse(keyString);
+                    const iv = CryptoJS.enc.Utf8.parse(ivString);
+                    const encrypted = CryptoJS.AES.encrypt($scope.user.password, key, {
+                        iv: iv,
+                        mode: CryptoJS.mode.CBC,
+                        padding: CryptoJS.pad.Pkcs7
+                    });
+
+                    let payload = {
+                        Email: $scope.user.email,
+                        Password: encrypted.toString(),
+                        Role: $scope.user.role
                     }
-                    $scope.loadingStatus = false;
+
+                    $http
+                        .post(path, payload)
+                        .then(function (response) {
+                            if (response.data.message === "register success") {
+                                $window.alert('Register Success');
+                                $location.path("/login"); // Redirect to dashboard or another page
+                            } else {
+                                $scope.errorMessage = response.data.message;
+                            }
+                            $scope.loadingStatus = false;
+                        })
+                        .catch(function (error) {
+                            $scope.loadingStatus = false;
+                            $scope.errorMessage = error.data.message || "An error occurred during login.";
+                        });
                 })
                 .catch(function (error) {
                     $scope.errorMessage = error.data.message || "An error occurred during login.";
