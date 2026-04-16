@@ -122,7 +122,7 @@ namespace BAU_PROTO.Services.AuthService
 
             if (getUser == null || getUser.RefreshTokenExpiresAt == null)
             {
-                throw new ArgumentException("Invalid refresh token, re-login");
+                throw new ArgumentException("Invalid refresh token, failed get user token info");
             }
 
             if (getUser.RefreshTokenExpiresAt < DateTime.UtcNow)
