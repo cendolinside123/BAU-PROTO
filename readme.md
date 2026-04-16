@@ -8,9 +8,10 @@ Installed Nodejs lib:
 For database using Mysql/Mariadb, you can change the connection string in appsettings.json file.
 My please import file is bau_storage.sql to database befor run the project, this file contains the database schema and some sample data.
 
-Front end page (NOTE: Not finish yet):
+Front end page:
 - Login page: /login
-- Home page: / (note aonly can be access afte login)
+- Register page: /register
+- Home page: / (note aonly can be access after login, all process CRUD products happen in here)
 Front end using angularjs, can be found on wwwroot folder, you can run the project and access the pages using browser.
 
 .env file:
