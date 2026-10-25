@@ -1,7 +1,7 @@
 ﻿
 app.controller('AddEditProductController', [
-    '$scope', '$http', '$location', '$window', 'CONFIG',
-    function ($scope, $http, $location, $window, CONFIG) {
+    '$scope', '$http', '$location', '$window', 'CONFIG', '$rootScope',
+    function ($scope, $http, $location, $window, CONFIG, $rootScope) {
 
         let storage = $window.localStorage;
 
@@ -64,6 +64,7 @@ app.controller('AddEditProductController', [
                         } else {
                             $window.alert('Add product Success');   
                         }
+                        $rootScope.$broadcast('reloadList');
                         $scope.product = null;
                     } else {
                         $scope.errorMessage = getMessage;

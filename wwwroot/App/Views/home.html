@@ -29,7 +29,7 @@
                                 </label>
                             </div>
                             <div class="form-group">
-                                <button type="submit" class="btn btn-lg btn-success btn-block" ng-click="addEditProduct()" ng-disabled="loadingStatus">Add Product</button>
+                                <button type="submit" class="btn btn-lg btn-success btn-block" ng-click="addEditProduct()" ng-disabled="loadingStatus"> {{ product.id == null ? 'Add Product' : 'Edit Product' }}</button>
                             </div>
                         </fieldset>
                     </form>

@@ -81,6 +81,12 @@
             $rootScope.$broadcast('editProductValue', item);
         }
 
+        $scope.$on('reloadList', function (events) {
+            $scope.page = 1;
+            console.log($scope.page);
+            $scope.getProducts();
+        })
+
         $scope.deleteSelectedItem = function (itemID) {
             var ctrl = this;
             if ($window.confirm("Are you sure you want to delete this?")) {
