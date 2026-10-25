@@ -18,12 +18,10 @@ namespace BAU_PROTO.Services.ProductService
             _authService = new AuthServiceImpl(context);
             
         }
-        public async Task<int> CreateProduct(AddProductDto createProductDto, string refreshToken)
+        public async Task<int> CreateProduct(AddProductDto createProductDto)
         {
             try
             {
-                _ = await _authService.RefreshTokenValidation(refreshToken);
-
                 var validationErrors = createProductDto.InputValidation();
 
                 if (validationErrors.Count > 0)
@@ -47,12 +45,10 @@ namespace BAU_PROTO.Services.ProductService
             }
         }
 
-        public async Task<int> DeleteProduct(DeleteProductDto deleteProductDto, string refreshToken)
+        public async Task<int> DeleteProduct(DeleteProductDto deleteProductDto)
         {
             try
             {
-                _ = await _authService.RefreshTokenValidation(refreshToken);
-
                 var validationErrors = deleteProductDto.InputValidation();
 
                 if (validationErrors.Count > 0)
@@ -78,11 +74,10 @@ namespace BAU_PROTO.Services.ProductService
             }
         }
 
-        public async Task<List<Products>> GetProducts(SearchProductDto? searchProductDto, string refreshToken)
+        public async Task<List<Products>> GetProducts(SearchProductDto? searchProductDto)
         {
             try
             {
-                _ = await _authService.RefreshTokenValidation(refreshToken);
                 IQueryable<Products> productQuery = _context.Products;
                 if (searchProductDto == null)
                 {
@@ -112,11 +107,10 @@ namespace BAU_PROTO.Services.ProductService
             }
         }
 
-        public async Task<int> UpdateProduct(UpdateProducDto updateProducDto, string refreshToken)
+        public async Task<int> UpdateProduct(UpdateProducDto updateProducDto)
         {
             try
             {
-                _ = await _authService.RefreshTokenValidation(refreshToken);
                 var validationErrors = updateProducDto.InputValidation();
 
                 if (validationErrors.Count > 0)
@@ -147,11 +141,10 @@ namespace BAU_PROTO.Services.ProductService
             }
         }
 
-        public async Task<Products> GetProductSpesific(SpesificSelectProductDto spesificSelectProductDto, string refreshToken)
+        public async Task<Products> GetProductSpesific(SpesificSelectProductDto spesificSelectProductDto)
         {
             try
             {
-                _ = await _authService.RefreshTokenValidation(refreshToken);
                 var validationErrors = spesificSelectProductDto.InputValidation();
 
                 if (validationErrors.Count > 0)

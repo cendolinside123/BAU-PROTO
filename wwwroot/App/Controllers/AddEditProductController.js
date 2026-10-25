@@ -23,7 +23,6 @@ app.controller('AddEditProductController', [
 
         $scope.addEditProduct = function () {
 
-            let refreshToken = storage.getItem('refreshToken');
             let token = storage.getItem('token');
 
             $scope.errorMessage = "";
@@ -38,14 +37,13 @@ app.controller('AddEditProductController', [
             }
 
             let headres = {
-                Refreshtoken: refreshToken,
                 Authorization: "Bearer " + token
             }
 
             let payload = {
                 Name: $scope.product.nama,
                 Description: $scope.product.desc,
-                Price: $scope.product.harga
+                Price: $scope.product.harga.toString()
             }
 
             let apiPath = path;

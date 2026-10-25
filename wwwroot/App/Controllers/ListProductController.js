@@ -21,11 +21,9 @@
 
         $scope.getProducts = function () {
 
-            let refreshToken = storage.getItem('refreshToken');
             let token = storage.getItem('token');
 
             let headres = {
-                Refreshtoken: refreshToken,
                 Authorization: "Bearer " + token
             }
 

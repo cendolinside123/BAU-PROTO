@@ -26,8 +26,7 @@ namespace BAU_PROTO.Controllers.ProductController
         {
             try
             {
-                var refreshToken = Request.Headers["Refreshtoken"].ToString();
-                var result = await _productService.CreateProduct(addProductDto, refreshToken);
+                var result = await _productService.CreateProduct(addProductDto);
                 var response = new
                 {
                     message = "add product success"
@@ -47,8 +46,7 @@ namespace BAU_PROTO.Controllers.ProductController
         {
             try
             {
-                var refreshToken = Request.Headers["Refreshtoken"].ToString();
-                _ = await _productService.UpdateProduct(updateProducDto, refreshToken);
+                _ = await _productService.UpdateProduct(updateProducDto);
                 var response = new
                 {
                     message = "update product success"
@@ -68,8 +66,7 @@ namespace BAU_PROTO.Controllers.ProductController
         {
             try
             {
-                var refreshToken = Request.Headers["Refreshtoken"].ToString();
-                _ = await _productService.DeleteProduct(deleteProductDto, refreshToken);
+                _ = await _productService.DeleteProduct(deleteProductDto);
                 var response = new
                 {
                     message = "delete product success"
@@ -90,8 +87,7 @@ namespace BAU_PROTO.Controllers.ProductController
         {
             try
             {
-                var refreshToken = Request.Headers["Refreshtoken"].ToString();
-                var result = await _productService.GetProducts(searchProductDto, refreshToken);
+                var result = await _productService.GetProducts(searchProductDto);
                 var response = new
                 {
                     message = "get list product success",
@@ -113,8 +109,7 @@ namespace BAU_PROTO.Controllers.ProductController
         {
             try
             {
-                var refreshToken = Request.Headers["Refreshtoken"].ToString();
-                var result = await _productService.GetProductSpesific(searchProductDto, refreshToken);
+                var result = await _productService.GetProductSpesific(searchProductDto);
                 var response = new
                 {
                     message = "get product success",

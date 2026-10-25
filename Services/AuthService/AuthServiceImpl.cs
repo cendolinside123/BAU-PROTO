@@ -64,6 +64,7 @@ namespace BAU_PROTO.Services.AuthService
             {
                 var getUser = await this.RefreshTokenValidation(refreshToken);
                 var newAccessToken = _jwtService.RenewToken(accessToken, getUser.expiredDate);
+                var newRefreshToken = _jwtService.GenerateRefreshToken();
                 if (newAccessToken == null)
                 {
                     throw new ArgumentException("Invalid access token, re-login");
