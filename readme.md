@@ -126,15 +126,14 @@ Logout the user and clear the active refresh token (requires authentication via 
 ---
 
 ### Products
-> All Product endpoints require authentication (`AccessToken` scheme) and expect both `Authorization` and `Refreshtoken` headers.
+> All Product endpoints require authentication (`AccessToken` scheme) via the `Authorization` header.
 
 #### `POST /api/Product/GetListProduct`
 Get a paginated list of products with optional name filtering.
 - **Headers**:
   ```json
   {
-    "Authorization": "Bearer <access_token_from_login>",
-    "Refreshtoken": "<refresh_token_from_login>"
+    "Authorization": "Bearer <access_token_from_login>"
   }
   ```
 - **Request Body**:
@@ -152,8 +151,7 @@ Get details of a specific product by ID.
 - **Headers**:
   ```json
   {
-    "Authorization": "Bearer <access_token_from_login>",
-    "Refreshtoken": "<refresh_token_from_login>"
+    "Authorization": "Bearer <access_token_from_login>"
   }
   ```
 - **Request Body**:
@@ -168,8 +166,7 @@ Create a new product.
 - **Headers**:
   ```json
   {
-    "Authorization": "Bearer <access_token_from_login>",
-    "Refreshtoken": "<refresh_token_from_login>"
+    "Authorization": "Bearer <access_token_from_login>"
   }
   ```
 - **Request Body**:
@@ -186,8 +183,7 @@ Update an existing product by ID.
 - **Headers**:
   ```json
   {
-    "Authorization": "Bearer <access_token_from_login>",
-    "Refreshtoken": "<refresh_token_from_login>"
+    "Authorization": "Bearer <access_token_from_login>"
   }
   ```
 - **Request Body**:
@@ -205,8 +201,7 @@ Delete a product by ID.
 - **Headers**:
   ```json
   {
-    "Authorization": "Bearer <access_token_from_login>",
-    "Refreshtoken": "<refresh_token_from_login>"
+    "Authorization": "Bearer <access_token_from_login>"
   }
   ```
 - **Request Body**:
