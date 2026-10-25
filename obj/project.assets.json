@@ -218,7 +218,7 @@
           }
         }
       },
-      "Microsoft.OpenApi/3.11.0": {
+      "Microsoft.OpenApi/2.12.2": {
         "type": "package",
         "compile": {
           "lib/net8.0/Microsoft.OpenApi.dll": {
@@ -596,10 +596,10 @@
         "microsoft.identitymodel.tokens.nuspec"
       ]
     },
-    "Microsoft.OpenApi/3.11.0": {
-      "sha512": "kvQz+mL/fnDw2VaE8zMyQhbMv7FmOYUydIhCVNKxQdrLu9XiMT/07DHwJ5YkRO2uzcxTFvMAKFKKywxoyLKHcA==",
+    "Microsoft.OpenApi/2.12.2": {
+      "sha512": "ZkT7qiJe0Kj0+DTZOZo+xrDy1kNmdsWFQVPIQLNx9ZJ0T9cB2LG7r+Bi60so8/+yg1nkS7QCPadrzsTG4VPKrA==",
       "type": "package",
-      "path": "microsoft.openapi/3.11.0",
+      "path": "microsoft.openapi/2.12.2",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -610,7 +610,7 @@
         "lib/netstandard2.0/Microsoft.OpenApi.dll",
         "lib/netstandard2.0/Microsoft.OpenApi.pdb",
         "lib/netstandard2.0/Microsoft.OpenApi.xml",
-        "microsoft.openapi.3.11.0.nupkg.sha512",
+        "microsoft.openapi.2.12.2.nupkg.sha512",
         "microsoft.openapi.nuspec"
       ]
     },
@@ -786,7 +786,6 @@
       "DotNetEnv >= 3.2.0",
       "Microsoft.AspNetCore.Authentication.JwtBearer >= 10.0.13",
       "Microsoft.AspNetCore.OpenApi >= 10.0.13",
-      "Microsoft.OpenApi >= 3.11.0",
       "Microsoft.VisualStudio.Azure.Containers.Tools.Targets >= 1.23.0",
       "Pomelo.EntityFrameworkCore.MySql >= 9.0.0"
     ]
@@ -854,10 +853,6 @@
           "Microsoft.AspNetCore.OpenApi": {
             "target": "Package",
             "version": "[10.0.13, )"
-          },
-          "Microsoft.OpenApi": {
-            "target": "Package",
-            "version": "[3.11.0, )"
           },
           "Microsoft.VisualStudio.Azure.Containers.Tools.Targets": {
             "target": "Package",
@@ -1304,17 +1299,5 @@
         }
       }
     }
-  },
-  "logs": [
-    {
-      "code": "NU1608",
-      "level": "Warning",
-      "warningLevel": 1,
-      "message": "Detected package version outside of dependency constraint: Microsoft.AspNetCore.OpenApi 10.0.13 requires Microsoft.OpenApi (>= 2.12.2 && < 3.0.0) but version Microsoft.OpenApi 3.11.0 was resolved.",
-      "libraryId": "Microsoft.OpenApi",
-      "targetGraphs": [
-        "net10.0"
-      ]
-    }
-  ]
+  }
 }
