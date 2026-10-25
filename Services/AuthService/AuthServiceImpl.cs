@@ -12,15 +12,13 @@ namespace BAU_PROTO.Services.AuthService
 
         private readonly JwtService.JwtService _jwtService;
         private readonly string _key;
-        private readonly string _iv;
 
         public AuthServiceImpl(AppDbContext context)
         {
             _context = context;
             var _config = new ConfigurationBuilder().AddJsonFile(ConstantConfig.GetAppConfig()).Build();
             _jwtService = new JwtService.JwtService(_config);
-            _key = Environment.GetEnvironmentVariable(ConstantConfig.Key) ?? throw new InvalidOperationException("Error server security config, go ask server owner"); ;
-            _iv = Environment.GetEnvironmentVariable(ConstantConfig.IV) ?? throw new InvalidOperationException("Error server security config, go ask server owner");
+            _key = Environment.GetEnvironmentVariable(ConstantConfig.Key) ?? throw new InvalidOperationException("Error server security config, go ask server owner");
         }
 
         public async Task<(string token, string refreshToken, Users userInfo)> Login(LoginRequestDto loginRequest)
@@ -37,7 +35,7 @@ namespace BAU_PROTO.Services.AuthService
                 throw new ArgumentException("Email not found");
             }
 
-            var getPasssword = SecurityEncrypt.Decrypt(getUser.PasswordHash, _key, _iv);
+            var getPasssword = SecurityEncrypt.Decrypt(getUser.PasswordHash, _key);
 
             if (loginRequest.DecryptPassword() != getPasssword)
             {
@@ -89,7 +87,7 @@ namespace BAU_PROTO.Services.AuthService
                 throw new ArgumentException(string.Join(", ", validationErrors));
             }
 
-            var passwordHash = SecurityEncrypt.Encrypt(registerRequest.DecryptPassword(), _key, _iv);
+            var passwordHash = SecurityEncrypt.Encrypt(registerRequest.DecryptPassword(), _key);
             var user = new Users
             {
                 Email = registerRequest.Email,
