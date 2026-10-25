@@ -1,15 +1,16 @@
-﻿app.config(['$routeProvider', '$locationProvider', '$httpProvider',
+app.config(['$routeProvider', '$locationProvider', '$httpProvider',
     function ($routeProvider, $locationProvider, $httpProvider) {
+        const cacheBust = "?v=" + new Date().getTime();
 
         $routeProvider
             .when("/", {
-                templateUrl: "app/views/home.html",
+                templateUrl: "app/views/home.html" + cacheBust,
             })
             .when("/login", {
-                templateUrl: "app/views/login.html",
+                templateUrl: "app/views/login.html" + cacheBust,
             })
             .when("/register", {
-                templateUrl: "app/views/register.html",
+                templateUrl: "app/views/register.html" + cacheBust,
             })
             .otherwise({
                 redirectTo: "/"
@@ -32,11 +33,11 @@ app.run(['$rootScope', '$location', '$window',
             let token = $window.localStorage.getItem("token");
 
             if (!user) {
-                if (next.templateUrl !== "app/views/login.html" && next.templateUrl !== "app/views/register.html") {
+                if (!next.templateUrl || (next.templateUrl.indexOf("app/views/login.html") === -1 && next.templateUrl.indexOf("app/views/register.html") === -1)) {
                     $location.path("/login");
                 }
             } else {
-                if (next.templateUrl === "app/views/login.html" || next.templateUrl === "app/views/register.html") {
+                if (next.templateUrl && (next.templateUrl.indexOf("app/views/login.html") !== -1 || next.templateUrl.indexOf("app/views/register.html") !== -1)) {
                     $location.path("/");
                 }
             }

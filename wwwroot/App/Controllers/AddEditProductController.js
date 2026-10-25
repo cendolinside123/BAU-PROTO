@@ -1,4 +1,4 @@
-﻿
+
 app.controller('AddEditProductController', [
     '$scope', '$http', '$location', '$window', 'CONFIG', '$rootScope',
     function ($scope, $http, $location, $window, CONFIG, $rootScope) {
@@ -18,7 +18,9 @@ app.controller('AddEditProductController', [
 
         $scope.$on('editProductValue', function (events, args) {
             console.log(args);
-            $scope.product = args;
+            $scope.$applyAsync(function () {
+                $scope.product = angular.copy(args);
+            });
         })
 
         $scope.addEditProduct = function () {
@@ -65,7 +67,12 @@ app.controller('AddEditProductController', [
                             $window.alert('Add product Success');   
                         }
                         $rootScope.$broadcast('reloadList');
-                        $scope.product = null;
+                        $scope.product = {
+                            id: null,
+                            nama: null,
+                            desc: null,
+                            harga: null
+                        };
                     } else {
                         $scope.errorMessage = getMessage;
                     }
