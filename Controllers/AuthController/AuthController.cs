@@ -104,14 +104,12 @@ namespace BAU_PROTO.Controllers.AuthController
         }
 
         [HttpPost("logout")]
-        [Authorize(AuthenticationSchemes = "RefreshToken")]
         public async Task<Object> logout()
         {
             try
             {
-                var refreshToken = Request.Headers["Refreshtoken"].ToString();
                 var accessToken = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-                var doLogout = await _authService.Logout(refreshToken)  ;
+                var doLogout = await _authService.Logout(accessToken)  ;
                 var response = new
                 {
                     message = "logout success"
@@ -124,31 +122,5 @@ namespace BAU_PROTO.Controllers.AuthController
                 return BadRequest(new { message = ex.Message });
             }
         }
-
-        //[HttpPost("test")]
-        //[Authorize]
-        //public ActionResult<Object> test()
-        //{
-        //    var refreshToken = Request.Headers["refreshToken"].ToString();
-        //    var accessToken = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
-        //    try
-        //    {
-        //        _ = _authService.RefreshTokenValidation(refreshToken).Result;
-        //        var response = new
-        //        {
-        //            message = "test success",
-        //            data = new
-        //            {
-        //                access_token = accessToken,
-        //                refresh_token = refreshToken
-        //            }
-        //        };
-        //        return Ok(response);
-        //    }
-        //    catch (Exception ex) {
-        //        return BadRequest(new { message = "test failed" });
-        //    }
-             
-        //}
     }
 }

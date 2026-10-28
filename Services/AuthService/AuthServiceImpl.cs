@@ -1,6 +1,7 @@
-﻿using BAU_PROTO.Persistence;
+using BAU_PROTO.Persistence;
 using Microsoft.AspNetCore.Identity.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using MySqlConnector;
 
 namespace BAU_PROTO.Services.AuthService
@@ -41,10 +42,11 @@ namespace BAU_PROTO.Services.AuthService
             {
                 throw new ArgumentException("Invalid email or password");
             }
-            var token = _jwtService.GenerateToken(getUser.Email, getUser.Role);
+
             var refreshToken = _jwtService.GenerateRefreshToken();
-            getUser.RefreshToken = refreshToken;
-            getUser.RefreshTokenExpiresAt = DateTime.UtcNow.Date.AddDays(1);
+            var token = _jwtService.GenerateToken(getUser.Email, getUser.Role, refreshToken);
+            
+            getUser.AccessToken = token;
             getUser.LoginAt = DateTime.UtcNow;
 
             try
@@ -62,8 +64,7 @@ namespace BAU_PROTO.Services.AuthService
         {
             try
             {
-                var getUser = await this.RefreshTokenValidation(refreshToken);
-                var newAccessToken = _jwtService.RenewToken(accessToken, getUser.expiredDate);
+                var newAccessToken = _jwtService.RenewToken(accessToken, refreshToken);
                 var newRefreshToken = _jwtService.GenerateRefreshToken();
                 if (newAccessToken == null)
                 {
@@ -115,35 +116,64 @@ namespace BAU_PROTO.Services.AuthService
             }
         }
 
-        public async Task<(int userId, DateTime expiredDate)> RefreshTokenValidation(string refreshToken)
+        public async Task<(int userId, DateTime expiredDate)> TokenValidation(string token)
         {
-            var getUser = await _context.Users.FirstOrDefaultAsync(u => u.RefreshToken == refreshToken);
 
-            if (getUser == null || getUser.RefreshTokenExpiresAt == null)
+            var getUserSessionInfo = _jwtService.GetUserInfoFromToken(token);
+
+            if (
+                getUserSessionInfo.email == null 
+                || getUserSessionInfo.role == null 
+                || getUserSessionInfo.refreshToken == null 
+                || getUserSessionInfo.claimNames == null 
+                || getUserSessionInfo.expiredDate == null
+            )
             {
-                throw new ArgumentException("Invalid refresh token, failed get user token info");
+                throw new JwtException(JwtErrorType.InvalidToken, "Invalid refresh token, failed get user token info");
             }
 
-            if (getUser.RefreshTokenExpiresAt < DateTime.UtcNow)
+            var getUser = await _context.Users.FirstOrDefaultAsync(u => u.AccessToken == token);
+
+            if (getUser == null || getUser.AccessToken != token)
             {
-                throw new ArgumentException("Refresh token expired, re-login");
+                throw new JwtException(JwtErrorType.InvalidToken, "Invalid token, failed get user token info");
             }
-            return (getUser.Id, getUser.RefreshTokenExpiresAt.Value);
+
+            var getUserInfo = _jwtService.GetUserInfoFromToken(getUser.AccessToken);
+
+            if (getUserSessionInfo.refreshToken != getUserInfo.refreshToken)
+            {
+                throw new JwtException(JwtErrorType.InvalidToken, "Invalid refresh token, failed get user token info");
+            }
+
+            if (getUserSessionInfo.expiredDate is not DateTime getDateTime) throw new JwtException(JwtErrorType.InvalidToken, "Invalid expired date");
+
+            if (getUserSessionInfo.expiredDate < DateTime.UtcNow)
+            {
+                throw new JwtException(JwtErrorType.RefreshTokenExpired, "Refresh token expired, re-login");
+            }
+            return (getUser.Id, getDateTime);
         }
 
-        public async Task<int> Logout(string refreshToken)
+        public async Task<int> Logout(string token)
         {
             try
             {
-                var getUser = await _context.Users.FirstOrDefaultAsync(u => u.RefreshToken == refreshToken);
+                var getUserInfo = _jwtService.GetUserInfoFromToken(token);
+
+                if (getUserInfo.email == null || getUserInfo.role == null || getUserInfo.refreshToken == null || getUserInfo.claimNames == null)
+                {
+                    throw new ArgumentException("Invalid refresh token, failed get user token info");
+                }
+
+                var getUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == getUserInfo.email);
 
                 if (getUser == null)
                 {
                     return 0; // No user found with the provided refresh token, consider it as already logged out
                 }
 
-                getUser.RefreshToken = null;
-                getUser.RefreshTokenExpiresAt = null;
+                getUser.AccessToken = null;
                 _context.Users.Update(getUser);
                 await _context.SaveChangesAsync();
                 return getUser.Id;

@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using BAU_PROTO.Services.AuthService;
+using BAU_PROTO.Services.ProductService;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http.HttpResults;
-using BAU_PROTO.Services.ProductService;
+using Microsoft.AspNetCore.Mvc;
 
 namespace BAU_PROTO.Controllers.ProductController
 {
@@ -12,11 +13,13 @@ namespace BAU_PROTO.Controllers.ProductController
 
         private readonly AppDbContext _context;
         private readonly ProductService _productService;
+        private readonly AuthService _authService;
 
         public ProductController(AppDbContext context)
         {
             _context = context;
             _productService = new ProductServiceImpl(_context);
+            _authService = new AuthServiceImpl(_context);
         }
 
 
@@ -26,6 +29,8 @@ namespace BAU_PROTO.Controllers.ProductController
         {
             try
             {
+                var accessToken = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+                await _authService.TokenValidation(accessToken);
                 var result = await _productService.CreateProduct(addProductDto);
                 var response = new
                 {
@@ -33,11 +38,14 @@ namespace BAU_PROTO.Controllers.ProductController
                 };
                 return Ok(response);
             }
+            catch (JwtException ex)
+            {
+                return Unauthorized(new { message = ex.Message });
+            }
             catch (Exception ex)
             {
                 return BadRequest(new { message = ex.Message });
             }
-
         }
 
         [HttpPost("UpdateProduct")]
@@ -46,12 +54,18 @@ namespace BAU_PROTO.Controllers.ProductController
         {
             try
             {
+                var accessToken = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+                await _authService.TokenValidation(accessToken);
                 _ = await _productService.UpdateProduct(updateProducDto);
                 var response = new
                 {
                     message = "update product success"
                 };
                 return Ok(response);
+            }
+            catch (JwtException ex)
+            {
+                return Unauthorized(new { message = ex.Message });
             }
             catch (Exception ex)
             {
@@ -66,12 +80,18 @@ namespace BAU_PROTO.Controllers.ProductController
         {
             try
             {
+                var accessToken = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+                await _authService.TokenValidation(accessToken);
                 _ = await _productService.DeleteProduct(deleteProductDto);
                 var response = new
                 {
                     message = "delete product success"
                 };
                 return Ok(response);
+            }
+            catch (JwtException ex)
+            {
+                return Unauthorized(new { message = ex.Message });
             }
             catch (Exception ex)
             {
@@ -87,6 +107,8 @@ namespace BAU_PROTO.Controllers.ProductController
         {
             try
             {
+                var accessToken = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+                await _authService.TokenValidation(accessToken);
                 var result = await _productService.GetProducts(searchProductDto);
                 var response = new
                 {
@@ -95,6 +117,10 @@ namespace BAU_PROTO.Controllers.ProductController
                     data = result
                 };
                 return Ok(response);
+            }
+            catch (JwtException ex)
+            {
+                return Unauthorized(new { message = ex.Message });
             }
             catch (Exception ex)
             {
@@ -109,6 +135,8 @@ namespace BAU_PROTO.Controllers.ProductController
         {
             try
             {
+                var accessToken = Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+                await _authService.TokenValidation(accessToken);
                 var result = await _productService.GetProductSpesific(searchProductDto);
                 var response = new
                 {
@@ -116,6 +144,10 @@ namespace BAU_PROTO.Controllers.ProductController
                     data = result
                 };
                 return Ok(response);
+            }
+            catch (JwtException ex)
+            {
+                return Unauthorized(new { message = ex.Message });
             }
             catch (Exception ex)
             {

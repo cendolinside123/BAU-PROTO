@@ -1,5 +1,6 @@
 ﻿using BAU_PROTO.Persistence;
 using Microsoft.IdentityModel.Tokens;
+using System.ComponentModel.DataAnnotations;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
@@ -19,13 +20,14 @@ namespace BAU_PROTO.Services.JwtService
                 throw new InvalidOperationException("Error server security config, go ask server owner");
         }
 
-        public string GenerateToken(string username, string role)
+        public string GenerateToken(string username, string role, string refreshToken)
         {
             var claims = new[]
             {
                 new Claim(ClaimTypes.Name, username),
                 new Claim(ClaimTypes.Role, role),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+                new Claim("refreshToken", refreshToken)
             };
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_key));
@@ -46,30 +48,48 @@ namespace BAU_PROTO.Services.JwtService
             return Guid.NewGuid().ToString();
         }
 
-        public string RenewToken(string token,
-            DateTime expiredDate)
+        public string RenewToken(string token, string refreshToken)
         {
 
             var handler = new JwtSecurityTokenHandler();
-            var jwtToken = handler.ReadJwtToken(token); ;
+            var jwtToken = GetUserInfoFromToken(token);
             
-            var username = jwtToken?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
-            var claimNames = jwtToken?.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti)?.Value;
-            var role = jwtToken?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+            var username = jwtToken.email;
+            var claimNames = jwtToken.claimNames;
+            var role = jwtToken.role;
+            var refreshTokenClaim = jwtToken.refreshToken;
+            var expiredDateFromToken = jwtToken.expiredDate;
 
-            if (username == null || claimNames == null || role == null)
+            if (username == null || claimNames == null || role == null || refreshTokenClaim == null)
             {
                 throw new JwtException(JwtErrorType.InvalidToken);
             }
 
-            if (expiredDate < DateTime.UtcNow)
+            if (refreshTokenClaim != refreshToken)
             {
                 throw new JwtException(JwtErrorType.RefreshTokenExpired);
             }
 
-            return this.GenerateToken(username, role);
+            if (expiredDateFromToken < DateTime.UtcNow)
+            {
+                throw new JwtException(JwtErrorType.RefreshTokenExpired);
+            }
+
+            return this.GenerateToken(username, role, GenerateRefreshToken());
         }
 
+        public (string? email, string? role, string? refreshToken, string? claimNames, DateTime? expiredDate) GetUserInfoFromToken(string token)
+        {
+            var handler = new JwtSecurityTokenHandler();
+            var jwtToken = handler.ReadJwtToken(token);
 
+            var email = jwtToken?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name)?.Value;
+            var role = jwtToken?.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value;
+            var refreshTokenClaim = jwtToken?.Claims.FirstOrDefault(c => c.Type == "refreshToken")?.Value;
+            var claimNames = jwtToken?.Claims.FirstOrDefault(c => c.Type == JwtRegisteredClaimNames.Jti)?.Value;
+            var expiredDate = jwtToken?.ValidTo;
+
+            return (email, role, refreshTokenClaim, claimNames, expiredDate);
+        }
     }
 }

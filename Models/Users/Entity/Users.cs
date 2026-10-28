@@ -6,6 +6,5 @@
     public required string PasswordHash { get; set; }
     public DateTime CreatedAt { get; set; }
     public DateTime? LoginAt { get; set; }
-    public string? RefreshToken { get; set; }
-    public DateTime? RefreshTokenExpiresAt { get; set; }
+    public string? AccessToken { get; set; }
 }
