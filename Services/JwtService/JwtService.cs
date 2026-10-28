@@ -34,9 +34,13 @@ namespace BAU_PROTO.Services.JwtService
 
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
+            var now = DateTime.UtcNow;
+            var oneHour = now.AddHours(1);
+            var midnight = now.Date.AddDays(1).AddSeconds(-1);
+
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddHours(1),
+                expires: oneHour < midnight ? oneHour : midnight,
                 signingCredentials: creds
             );
 
