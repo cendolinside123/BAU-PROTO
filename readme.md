@@ -114,12 +114,11 @@ Refresh an expired JWT access token (requires authentication via `RefreshToken` 
   ```
 
 #### `POST /api/auth/logout`
-Logout the user and clear the active refresh token (requires authentication via `RefreshToken` scheme).
+Logout the user and clear the active session token.
 - **Headers**:
   ```json
   {
-    "Authorization": "Bearer <access_token_from_login>",
-    "Refreshtoken": "<refresh_token_from_login>"
+    "Authorization": "Bearer <access_token_from_login>"
   }
   ```
 
