@@ -65,7 +65,6 @@ namespace BAU_PROTO.Services.AuthService
             try
             {
                 var newAccessToken = _jwtService.RenewToken(accessToken, refreshToken);
-                var newRefreshToken = _jwtService.GenerateRefreshToken();
                 if (newAccessToken == null)
                 {
                     throw new ArgumentException("Invalid access token, re-login");
@@ -148,7 +147,7 @@ namespace BAU_PROTO.Services.AuthService
 
             if (getUserSessionInfo.expiredDate is not DateTime getDateTime) throw new JwtException(JwtErrorType.InvalidToken, "Invalid expired date");
 
-            if (getUserSessionInfo.expiredDate < DateTime.UtcNow)
+            if (getDateTime.Date.AddDays(1) <= DateTime.UtcNow)
             {
                 throw new JwtException(JwtErrorType.RefreshTokenExpired, "Refresh token expired, re-login");
             }
