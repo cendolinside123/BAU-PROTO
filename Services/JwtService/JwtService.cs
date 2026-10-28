@@ -48,34 +48,29 @@ namespace BAU_PROTO.Services.JwtService
             return Guid.NewGuid().ToString();
         }
 
-        public string RenewToken(string token, string refreshToken)
+        public (string token, string email) RenewToken(string token, string refreshToken)
         {
 
             var handler = new JwtSecurityTokenHandler();
             var jwtToken = GetUserInfoFromToken(token);
-            
-            var username = jwtToken.email;
-            var claimNames = jwtToken.claimNames;
-            var role = jwtToken.role;
-            var refreshTokenClaim = jwtToken.refreshToken;
-            var expiredDateFromToken = jwtToken.expiredDate;
 
-            if (username == null || claimNames == null || role == null || refreshTokenClaim == null)
-            {
-                throw new JwtException(JwtErrorType.InvalidToken);
-            }
+            if (jwtToken.email is not string username) throw new JwtException(JwtErrorType.InvalidToken);
+            if (jwtToken.claimNames is not string claimNames) throw new JwtException(JwtErrorType.InvalidToken);
+            if (jwtToken.role is not string role) throw new JwtException(JwtErrorType.InvalidToken);
+            if (jwtToken.refreshToken is not string refreshTokenClaim) throw new JwtException(JwtErrorType.InvalidToken);
+            if (jwtToken.expiredDate is not DateTime expiredDateFromToken) throw new JwtException(JwtErrorType.InvalidToken, "Invalid expired date");
 
             if (refreshTokenClaim != refreshToken)
             {
                 throw new JwtException(JwtErrorType.RefreshTokenExpired);
             }
 
-            if (expiredDateFromToken?.Date.AddDays(1) <= DateTime.UtcNow)
+            if (expiredDateFromToken.Date.AddDays(1) <= DateTime.UtcNow)
             {
                 throw new JwtException(JwtErrorType.RefreshTokenExpired);
             }
 
-            return this.GenerateToken(username, role, GenerateRefreshToken());
+            return (this.GenerateToken(username, role, GenerateRefreshToken()), username);
         }
 
         public (string? email, string? role, string? refreshToken, string? claimNames, DateTime? expiredDate) GetUserInfoFromToken(string token)

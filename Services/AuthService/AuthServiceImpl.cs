@@ -45,7 +45,7 @@ namespace BAU_PROTO.Services.AuthService
 
             var refreshToken = _jwtService.GenerateRefreshToken();
             var token = _jwtService.GenerateToken(getUser.Email, getUser.Role, refreshToken);
-            
+
             getUser.AccessToken = token;
             getUser.LoginAt = DateTime.UtcNow;
 
@@ -65,13 +65,18 @@ namespace BAU_PROTO.Services.AuthService
             try
             {
                 var newAccessToken = _jwtService.RenewToken(accessToken, refreshToken);
-                if (newAccessToken == null)
+                var getUser = await _context.Users.FirstOrDefaultAsync(u => u.Email == newAccessToken.email);
+
+                if (getUser == null)
                 {
-                    throw new ArgumentException("Invalid access token, re-login");
-                } else
-                {
-                    return newAccessToken;
+                    throw new JwtException(JwtErrorType.ConfigurationError, "Failed get user information");
                 }
+
+                getUser.AccessToken = newAccessToken.token;
+
+                await _context.SaveChangesAsync();
+
+                return newAccessToken.token;
             }
             catch (JwtException ex)
             {
